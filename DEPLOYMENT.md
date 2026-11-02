@@ -48,7 +48,7 @@ mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/sav
    - **Branch:** `main`
    - **Root Directory:** `backend`
    - **Runtime:** `Node`
-   - **Build Command:** `pnpm install && pnpm run build`
+   - **Build Command:** `pnpm install --prod=false && pnpm run build`
    - **Start Command:** `node dist/server.js`
    - **Plan:** Free or Starter
 
