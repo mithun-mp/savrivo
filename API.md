@@ -130,3 +130,4 @@ Headers: `Authorization: Bearer <jwt-token>`
 ### Settings
 - **`GET /api/admin/settings`** — Get site-wide configuration.
 - **`PATCH /api/admin/settings`** — Update site settings (tagline, contact email, etc.).
+

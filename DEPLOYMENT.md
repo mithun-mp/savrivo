@@ -89,3 +89,4 @@ The repository contains an automated GitHub Actions workflow at [`.github/workfl
 - [ ] Admin portal is accessible only via `/admin/login` and rejects unauthenticated requests.
 - [ ] Affiliate links have `rel="sponsored nofollow noopener noreferrer"`.
 - [ ] All sensitive credentials remain exclusively in server environment variables.
+

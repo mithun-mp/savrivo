@@ -124,3 +124,4 @@ pnpm run build
 ```
 
 The frontend outputs a static build to `frontend/dist/` ready to be served by GitHub Pages or any static CDN.
+
