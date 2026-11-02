@@ -55,6 +55,7 @@ mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/sav
 5. Configure Environment Variables on Render:
    | Variable | Value | Notes |
    |---|---|---|
+   | `NODE_VERSION` | `20.18.0` | Pin Node.js 20 LTS (matches `.node-version`) |
    | `NODE_ENV` | `production` | Enables production optimizations and strict error masks |
    | `PORT` | `10000` | Standard Render web service port |
    | `MONGODB_URI` | `mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/savrivo?retryWrites=true&w=majority&appName=SAVRIVO` | Insert actual password for user |

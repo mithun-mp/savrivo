@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "SAVRIVO affiliate discovery platform — backend API",
   "main": "dist/server.js",
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
