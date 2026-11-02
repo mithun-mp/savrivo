@@ -5,6 +5,7 @@ import ProductGrid from '../components/product/ProductGrid';
 import GuideCard from '../components/guide/GuideCard';
 import AffiliateDisclosure from '../components/ui/AffiliateDisclosure';
 import { url } from '../lib/paths';
+import { API_BASE } from '../lib/api';
 import type { Category, Product, Guide } from '../types';
 
 // Gracefully fetch data at build time — fall back to empty on error
@@ -12,8 +13,6 @@ let categories: Category[] = [];
 let featuredProducts: Product[] = [];
 let recentProducts: Product[] = [];
 let guides: Guide[] = [];
-
-const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
 
 async function safeFetch<T>(url: string): Promise<T[]> {
   try {

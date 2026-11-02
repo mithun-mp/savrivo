@@ -24,7 +24,18 @@ if (process.platform === 'win32') {
   }
 }
 
-const base = process.env.ASTRO_BASE || (process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '/savrivo');
+function getBase() {
+  if (process.env.ASTRO_BASE) return process.env.ASTRO_BASE;
+  if (process.env.GITHUB_REPOSITORY) {
+    const repo = process.env.GITHUB_REPOSITORY.split('/')[1];
+    if (repo) return `/${repo}`;
+  }
+  const cwd = process.cwd().replace(/\\/g, '/');
+  if (cwd.includes('savrivoapp')) return '/savrivoapp';
+  return '/savrivo';
+}
+
+const base = getBase();
 
 export default defineConfig({
   site: 'https://mithun-mp.github.io',

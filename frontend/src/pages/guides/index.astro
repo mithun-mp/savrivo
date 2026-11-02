@@ -2,9 +2,8 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import GuideCard from '../../components/guide/GuideCard';
 import { url } from '../../lib/paths';
+import { API_BASE } from '../../lib/api';
 import type { Guide } from '../../types';
-
-const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
 let guides: Guide[] = [];
 try {
   const res = await fetch(`${API_BASE}/guides?limit=50`, { signal: AbortSignal.timeout(5000) });

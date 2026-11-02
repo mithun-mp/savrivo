@@ -1,6 +1,8 @@
 import type { ApiResponse } from '@/types';
 
-const API_BASE = (import.meta as unknown as { env: Record<string, string> }).env?.PUBLIC_API_URL || 'http://localhost:4000/api';
+const isProd = import.meta.env.PROD;
+const DEFAULT_API = isProd ? 'https://savrivo-backend.onrender.com/api' : 'http://localhost:4000/api';
+export const API_BASE = (import.meta as unknown as { env: Record<string, string> }).env?.PUBLIC_API_URL || DEFAULT_API;
 
 async function apiRequest<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
   const controller = new AbortController();
