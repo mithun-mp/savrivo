@@ -4,7 +4,7 @@ import { sendSuccess } from '../utils/response';
 
 export async function getSettings(_req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    let settings = await SiteSettings.findOne({ _key: 'global' }).lean();
+    let settings: any = await SiteSettings.findOne({ _key: 'global' }).lean();
     if (!settings) {
       const newSettings = new SiteSettings({ _key: 'global' });
       settings = (await newSettings.save()).toObject();

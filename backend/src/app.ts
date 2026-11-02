@@ -14,14 +14,31 @@ export function createApp() {
   // Security headers
   app.use(helmet());
 
-  // CORS
+  // Multi-origin CORS support for both savrivo and savrivoapp
+  const configuredOrigins = (config.frontendOrigin || '')
+    .split(',')
+    .map((o) => o.trim().replace(/\/$/, ''))
+    .filter(Boolean);
+
+  const allowedOriginsSet = new Set([
+    'https://mithun-mp.github.io',
+    'https://savrivo.in',
+    'https://www.savrivo.in',
+    'https://app.savrivo.in',
+    'http://localhost:4321',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:4321',
+    'http://127.0.0.1:3000',
+    ...configuredOrigins,
+  ]);
+
   app.use(cors({
     origin: (origin, callback) => {
-      const allowed = [config.frontendOrigin, 'http://localhost:4321', 'http://localhost:3000'];
-      if (!origin || allowed.includes(origin)) {
+      if (!origin || allowedOriginsSet.has(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
       }
     },
     credentials: true,
