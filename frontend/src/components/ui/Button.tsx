@@ -11,17 +11,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const styles = {
-  base: 'inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all duration-150 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+  base: 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-150 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   variant: {
-    primary: 'text-white hover:opacity-90 active:scale-95',
-    secondary: 'border hover:opacity-80 active:scale-95',
-    ghost: 'hover:opacity-70 active:scale-95',
-    danger: 'text-white hover:opacity-90 active:scale-95',
+    primary: 'text-white hover:opacity-90 active:scale-[0.98] shadow-sv-sm',
+    secondary: 'hover:opacity-85 active:scale-[0.98]',
+    ghost: 'hover:opacity-75 active:scale-[0.98]',
+    danger: 'text-white hover:opacity-90 active:scale-[0.98] shadow-sv-sm',
   },
   size: {
-    sm: 'text-xs px-3 py-1.5 gap-1.5',
-    md: 'text-sm px-4 py-2.5',
-    lg: 'text-base px-6 py-3',
+    sm: 'text-xs px-3.5 py-2 gap-1.5 min-h-[36px]',
+    md: 'text-sm px-5 py-3 min-h-[44px]',
+    lg: 'text-base px-7 py-3.5 min-h-[50px]',
   },
 };
 
@@ -39,12 +39,12 @@ export default function Button({
 }: ButtonProps) {
   const variantStyle: React.CSSProperties =
     variant === 'primary'
-      ? { background: 'var(--color-accent)', color: '#fff' }
+      ? { background: 'var(--color-accent)', color: '#FFFFFF' }
       : variant === 'secondary'
-      ? { background: 'transparent', color: 'var(--color-text-1)', border: '1px solid var(--color-border)' }
+      ? { background: 'var(--color-surface)', color: 'var(--color-text-1)', border: '1px solid var(--color-border)' }
       : variant === 'ghost'
       ? { background: 'transparent', color: 'var(--color-text-2)' }
-      : { background: 'var(--color-error)', color: '#fff' };
+      : { background: 'var(--color-error)', color: '#FFFFFF' };
 
   const cls = `${styles.base} ${styles.variant[variant]} ${styles.size[size]} ${className}`;
 

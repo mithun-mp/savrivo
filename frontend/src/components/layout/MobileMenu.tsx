@@ -66,7 +66,7 @@ export default function MobileMenu({ open, onClose, currentPath, navLinks }: Mob
           <button
             ref={closeRef}
             onClick={onClose}
-            className="p-1 rounded-md"
+            className="p-2 -mr-2 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
             style={{ color: 'var(--color-text-2)' }}
             aria-label="Close menu"
           >
@@ -74,13 +74,13 @@ export default function MobileMenu({ open, onClose, currentPath, navLinks }: Mob
           </button>
         </div>
 
-        <nav className="flex-1 p-5 space-y-1" aria-label="Mobile navigation">
+        <nav className="flex-1 p-5 space-y-1.5" aria-label="Mobile navigation">
           {[{ href: '/', label: 'Home' }, ...navLinks].map(({ href, label }) => (
             <a
               key={href}
               href={url(href)}
               onClick={onClose}
-              className="block px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+              className="flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors min-h-[44px]"
               style={{
                 color: isActive(href) ? 'var(--color-accent)' : 'var(--color-text-1)',
                 background: isActive(href) ? 'var(--color-overlay)' : 'transparent',

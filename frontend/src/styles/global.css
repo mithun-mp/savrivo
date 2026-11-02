@@ -132,13 +132,20 @@ body {
   position: relative;
 }
 
+/* ── Selection Styles ── */
+::selection {
+  background: var(--color-accent-badge);
+  color: var(--color-accent-badge-text);
+}
+
 /* ── Card hover ── */
 .card-hover {
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
 }
 

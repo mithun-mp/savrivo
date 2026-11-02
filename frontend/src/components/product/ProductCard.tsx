@@ -54,7 +54,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Category badge */}
         {categoryName && (
           <span
-            className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full"
+            className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm"
             style={{ background: 'var(--color-surface)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
           >
             {categoryName}
@@ -62,8 +62,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
         {product.featured && (
           <span
-            className="absolute top-3 right-3 text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ background: 'var(--color-accent-2)', color: '#1A1A1A' }}
+            className="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm"
+            style={{ background: 'var(--color-curated-badge)', color: 'var(--color-curated-text)', border: '1px solid var(--color-border)' }}
           >
             Editor's Pick
           </span>

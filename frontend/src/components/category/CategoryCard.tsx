@@ -31,7 +31,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <a
       href={url(`/category/${category.slug}`)}
-      className="group flex flex-col gap-3 p-5 rounded-xl transition-all duration-200 card-hover"
+      className="group flex flex-col gap-3.5 p-6 rounded-2xl transition-all duration-200 card-hover"
       style={{
         background: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
@@ -40,19 +40,19 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       }}
     >
       <div
-        className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
-        style={{ background: 'rgba(28,69,50,0.08)', color: 'var(--color-accent)' }}
+        className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+        style={{ background: 'var(--color-accent-badge)', color: 'var(--color-accent)' }}
       >
         <CategoryIcon name={category.icon} />
       </div>
       <div>
-        <h3 className="font-semibold text-sm mb-1" style={{ color: 'var(--color-text-1)' }}>{category.name}</h3>
+        <h3 className="font-semibold text-base mb-1.5" style={{ color: 'var(--color-text-1)' }}>{category.name}</h3>
         {category.description && (
-          <p className="text-xs line-clamp-2" style={{ color: 'var(--color-text-2)' }}>{category.description}</p>
+          <p className="text-xs sm:text-sm line-clamp-2 leading-relaxed" style={{ color: 'var(--color-text-2)' }}>{category.description}</p>
         )}
       </div>
-      <div className="flex items-center gap-1 text-xs font-medium mt-auto" style={{ color: 'var(--color-accent)' }}>
-        Explore <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+      <div className="flex items-center gap-1.5 text-sm font-semibold mt-auto" style={{ color: 'var(--color-accent)' }}>
+        Explore <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
       </div>
     </a>
   );
