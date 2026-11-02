@@ -42,7 +42,7 @@ export default function SearchBar({
       className={`relative flex items-center ${fullWidth ? 'w-full' : 'w-full max-w-xl'}`}
     >
       <Search
-        size={18}
+        size={20}
         className="absolute left-4 pointer-events-none"
         style={{ color: 'var(--color-text-2)' }}
         aria-hidden="true"
@@ -54,7 +54,7 @@ export default function SearchBar({
         onChange={e => setValue(e.target.value)}
         placeholder={placeholder}
         aria-label="Search SAVRIVO"
-        className="w-full pl-11 pr-10 py-3 rounded-xl text-sm outline-none transition-all duration-150"
+        className="w-full pl-12 pr-11 py-3.5 md:py-4 rounded-xl text-sm md:text-base outline-none transition-all duration-150 shadow-sv-sm"
         style={{
           background: 'var(--color-surface)',
           border: '1.5px solid var(--color-border)',
@@ -67,11 +67,11 @@ export default function SearchBar({
         <button
           type="button"
           onClick={() => setValue('')}
-          className="absolute right-3 p-1 rounded"
+          className="absolute right-3 p-1.5 rounded-lg min-w-[36px] min-h-[36px] flex items-center justify-center"
           style={{ color: 'var(--color-text-2)' }}
           aria-label="Clear search"
         >
-          <X size={14} />
+          <X size={16} />
         </button>
       )}
     </form>

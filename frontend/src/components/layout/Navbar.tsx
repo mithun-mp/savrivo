@@ -44,16 +44,16 @@ export default function Navbar({ currentPath }: NavbarProps) {
           WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
         }}
       >
-        <div className="container-content flex items-center h-16 gap-6">
+        <div className="container-content flex items-center h-16 lg:h-20 gap-6 lg:gap-8">
           {/* Logo */}
           <a
             href={url('/')}
-            className="flex items-center gap-2 shrink-0 font-bold tracking-[0.2em] text-sm"
+            className="flex items-center gap-2.5 shrink-0 font-bold tracking-[0.2em] text-sm lg:text-base"
             style={{ color: 'var(--color-accent)' }}
             aria-label="SAVRIVO — Home"
           >
             {/* Inline S mark */}
-            <svg width="28" height="28" viewBox="0 0 48 56" fill="none" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 48 56" fill="none" aria-hidden="true" className="shrink-0">
               <path
                 d="M32 6 C22 6 14 11 14 19 C14 25 19 28 26 30 L30 31.5 C38 33.5 44 37 44 44 C44 51 37 50 30 50 C23 50 16 47 14 41"
                 stroke="currentColor"
@@ -67,16 +67,16 @@ export default function Navbar({ currentPath }: NavbarProps) {
           </a>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-1.5 flex-1" aria-label="Main navigation">
             {navLinks.map(({ href, label }) => (
               <a
                 key={href}
                 href={url(href)}
-                className="px-3 py-2 text-sm rounded-md transition-colors duration-150"
+                className="px-3.5 py-2 lg:px-4 lg:py-2.5 text-sm lg:text-[15px] rounded-lg transition-colors duration-150"
                 style={{
                   color: isActive(href) ? 'var(--color-accent)' : 'var(--color-text-2)',
                   background: isActive(href) ? 'var(--color-overlay)' : 'transparent',
-                  fontWeight: isActive(href) ? '600' : '400',
+                  fontWeight: isActive(href) ? '600' : '500',
                 }}
               >
                 {label}
@@ -88,29 +88,29 @@ export default function Navbar({ currentPath }: NavbarProps) {
           <div className="flex items-center gap-2 ml-auto">
             <a
               href={url('/search')}
-              className="p-2 rounded-md transition-colors"
+              className="p-2.5 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
               style={{ color: 'var(--color-text-2)' }}
               aria-label="Search"
             >
-              <Search size={18} />
+              <Search size={19} />
             </a>
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-md transition-colors"
+              className="p-2.5 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
               style={{ color: 'var(--color-text-2)' }}
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
-              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+              {theme === 'light' ? <Moon size={19} /> : <Sun size={19} />}
             </button>
             {/* Mobile menu toggle */}
             <button
-              className="md:hidden p-2 rounded-md"
+              className="md:hidden p-2.5 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
               style={{ color: 'var(--color-text-2)' }}
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
               aria-expanded={menuOpen}
             >
-              <Menu size={20} />
+              <Menu size={22} />
             </button>
           </div>
         </div>

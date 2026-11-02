@@ -29,7 +29,7 @@
   --font-display: 'Playfair Display', Georgia, serif;
 
   /* Spacing scale */
-  --space-section: 80px;
+  --space-section: clamp(64px, 7vw, 104px);
 
   /* Transitions */
   --transition-fast:   150ms ease;

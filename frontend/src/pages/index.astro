@@ -34,6 +34,8 @@ try {
     safeFetch<Guide>(`${API_BASE}/guides?limit=3`),
   ]);
 } catch {}
+
+const topPick = featuredProducts.length > 0 ? featuredProducts[0] : null;
 ---
 
 <MainLayout
@@ -53,65 +55,153 @@ try {
 >
   <!-- ── HERO ── -->
   <section
-    class="relative overflow-hidden py-24 md:py-32"
+    class="relative overflow-hidden py-16 md:py-24 lg:py-28"
     style="background: var(--color-bg)"
   >
     <div class="container-content relative z-10">
-      <div class="max-w-2xl">
-        <p class="text-xs font-semibold uppercase tracking-[0.3em] mb-6" style="color: var(--color-accent)">
-          Smart Finds. Better Choices.
-        </p>
-        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style="color: var(--color-text-1)">
-          Find better products.<br />
-          <span style="color: var(--color-accent)">Make smarter choices.</span>
-        </h1>
-        <p class="text-lg leading-relaxed mb-10 max-w-xl" style="color: var(--color-text-2)">
-          SAVRIVO helps you discover curated products across trusted Indian retailers. We research, compare, and guide — you choose where to buy.
-        </p>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <!-- Left: Editorial Statement & Actions -->
+        <div class="lg:col-span-7 flex flex-col justify-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full w-fit mb-6" style="background: var(--color-overlay); border: 1px solid var(--color-border)">
+            <span class="w-2 h-2 rounded-full" style="background: var(--color-accent)"></span>
+            <span class="text-xs font-semibold uppercase tracking-[0.25em]" style="color: var(--color-accent)">
+              Smart Finds. Better Choices.
+            </span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.12] mb-6" style="color: var(--color-text-1)">
+            Find better products.<br />
+            <span style="color: var(--color-accent)">Make smarter choices.</span>
+          </h1>
+          <p class="text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-xl" style="color: var(--color-text-2)">
+            SAVRIVO helps you discover curated products across trusted Indian retailers. We research, compare, and guide — you choose where to buy.
+          </p>
 
-        <!-- Search bar -->
-        <div class="mb-8 max-w-lg">
-          <SearchBar client:load fullWidth={true} placeholder="Search products, guides, categories…" />
+          <!-- Search bar -->
+          <div class="mb-8 max-w-xl">
+            <SearchBar client:load fullWidth={true} placeholder="Search products, guides, categories…" />
+          </div>
+
+          <div class="flex flex-wrap gap-4">
+            <a
+              href={url('/products')}
+              class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-base font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98] shadow-sv-sm"
+              style="background: var(--color-accent)"
+            >
+              Explore Products
+            </a>
+            <a
+              href={url('/guides')}
+              class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-base font-semibold border transition-all hover:opacity-85 active:scale-[0.98]"
+              style="border-color: var(--color-border); color: var(--color-text-1); background: var(--color-surface)"
+            >
+              Discover Buying Guides
+            </a>
+          </div>
         </div>
 
-        <div class="flex flex-wrap gap-3">
-          <a
-            href={url('/products')}
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            style="background: var(--color-accent)"
-          >
-            Explore Products
-          </a>
-          <a
-            href={url('/guides')}
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border transition-colors hover:opacity-80"
-            style="border-color: var(--color-border); color: var(--color-text-1)"
-          >
-            Discover Buying Guides
-          </a>
+        <!-- Right: Curated Hero Showcase Card (Desktop & Tablet) -->
+        <div class="lg:col-span-5 hidden lg:block">
+          {topPick ? (
+            <div
+              class="rounded-2xl p-6 transition-all card-hover"
+              style="background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-lg)"
+            >
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full" style="background: var(--color-accent-2); color: #1A1A1A">
+                  Editor's Spotlight
+                </span>
+                <span class="text-xs font-medium" style="color: var(--color-text-2)">
+                  Verified Pick
+                </span>
+              </div>
+              <a href={url(`/product/${topPick.slug}`)} class="block relative rounded-xl overflow-hidden mb-4 group" style="aspect-ratio: 4/3; background: var(--color-overlay)">
+                {topPick.images?.[0] ? (
+                  <img
+                    src={topPick.images[0].url}
+                    alt={topPick.images[0].alt || topPick.title}
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="eager"
+                  />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-xs" style="color: var(--color-text-2)">
+                    Featured Product
+                  </div>
+                )}
+              </a>
+              <div class="space-y-2">
+                {topPick.brand && (
+                  <p class="text-xs font-semibold uppercase tracking-wider" style="color: var(--color-text-2)">
+                    {topPick.brand}
+                  </p>
+                )}
+                <h3 class="font-sans text-lg font-bold line-clamp-2 leading-snug" style="color: var(--color-text-1)">
+                  <a href={url(`/product/${topPick.slug}`)} class="hover:underline">
+                    {topPick.title}
+                  </a>
+                </h3>
+                {topPick.shortDescription && (
+                  <p class="text-sm line-clamp-2 leading-relaxed" style="color: var(--color-text-2)">
+                    {topPick.shortDescription}
+                  </p>
+                )}
+                <div class="pt-3 flex items-center justify-between border-t" style="border-color: var(--color-border)">
+                  <a
+                    href={url(`/product/${topPick.slug}`)}
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
+                    style="color: var(--color-accent)"
+                  >
+                    View Product Details →
+                  </a>
+                  <span class="text-xs font-medium" style="color: var(--color-text-2)">Trusted Retailers</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              class="rounded-2xl p-7 text-left space-y-4"
+              style="background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-lg)"
+            >
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h3 class="font-sans text-xl font-bold" style="color: var(--color-text-1)">
+                Curation Without Bias
+              </h3>
+              <p class="text-sm leading-relaxed" style="color: var(--color-text-2)">
+                Every product on SAVRIVO is evaluated on build quality, real-world utility, and verified availability across Amazon.in and Flipkart.
+              </p>
+              <div class="pt-2 flex gap-3">
+                <a href={url('/about')} class="text-sm font-semibold hover:underline" style="color: var(--color-accent)">
+                  Our editorial policy →
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
     <!-- Decorative element -->
-    <div class="absolute right-0 top-0 w-1/2 h-full pointer-events-none overflow-hidden opacity-30" aria-hidden="true">
-      <div class="absolute top-16 right-16 w-72 h-72 rounded-full" style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%); opacity: 0.1;"></div>
-      <div class="absolute bottom-16 right-32 w-48 h-48 rounded-full" style="background: radial-gradient(circle, var(--color-accent-2) 0%, transparent 70%); opacity: 0.15;"></div>
+    <div class="absolute right-0 top-0 w-1/2 h-full pointer-events-none overflow-hidden opacity-25" aria-hidden="true">
+      <div class="absolute top-16 right-16 w-80 h-80 rounded-full" style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%); opacity: 0.12;"></div>
+      <div class="absolute bottom-16 right-32 w-56 h-56 rounded-full" style="background: radial-gradient(circle, var(--color-accent-2) 0%, transparent 70%); opacity: 0.18;"></div>
     </div>
   </section>
 
   <!-- ── HOW IT WORKS ── -->
   <section class="section" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border)">
     <div class="container-content">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
         {[
           { step: '01', title: 'We Discover', desc: 'We research and curate products across categories — saving you time.' },
           { step: '02', title: 'You Compare', desc: 'View product details, specifications, and available merchant offers in one place.' },
           { step: '03', title: 'Buy at the Official Store', desc: 'Click Shop Now and complete your purchase directly on the retailer\'s website.' },
         ].map(({ step, title, desc }) => (
-          <div class="flex flex-col gap-3">
-            <span class="text-3xl font-display font-bold" style="color: var(--color-accent); opacity: 0.4">{step}</span>
-            <h3 class="text-base font-semibold" style="color: var(--color-text-1)">{title}</h3>
-            <p class="text-sm leading-relaxed" style="color: var(--color-text-2)">{desc}</p>
+          <div class="flex flex-col gap-3.5">
+            <span class="text-4xl font-display font-bold" style="color: var(--color-accent); opacity: 0.45">{step}</span>
+            <h3 class="text-base sm:text-lg font-semibold" style="color: var(--color-text-1)">{title}</h3>
+            <p class="text-sm sm:text-base leading-relaxed" style="color: var(--color-text-2)">{desc}</p>
           </div>
         ))}
       </div>
@@ -124,26 +214,26 @@ try {
       <div class="container-content">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Browse</p>
-            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Featured Categories</h2>
+            <p class="text-xs md:text-sm font-semibold uppercase tracking-wider mb-1" style="color: var(--color-accent)">Browse</p>
+            <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-bold" style="color: var(--color-text-1)">Featured Categories</h2>
           </div>
-          <a href={url('/categories')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/categories')} class="text-sm font-semibold hover:underline underline-offset-2" style="color: var(--color-accent)">
             View all →
           </a>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 md:gap-5">
           {categories.slice(0, 7).map(cat => (
             <a
               href={url(`/category/${cat.slug}`)}
-              class="flex flex-col items-center gap-2 p-4 rounded-xl text-center transition-all card-hover"
+              class="flex flex-col items-center gap-3 p-4 sm:p-5 rounded-xl text-center transition-all card-hover"
               style="background: var(--color-surface); border: 1px solid var(--color-border)"
             >
-              <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                   <circle cx="12" cy="12" r="9"/>
                 </svg>
               </div>
-              <span class="text-xs font-medium" style="color: var(--color-text-1)">{cat.name}</span>
+              <span class="text-xs sm:text-sm font-medium leading-tight" style="color: var(--color-text-1)">{cat.name}</span>
             </a>
           ))}
         </div>
@@ -157,14 +247,14 @@ try {
       <div class="container-content">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Curated</p>
-            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Editor's Picks</h2>
+            <p class="text-xs md:text-sm font-semibold uppercase tracking-wider mb-1" style="color: var(--color-accent)">Curated</p>
+            <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-bold" style="color: var(--color-text-1)">Editor's Picks</h2>
           </div>
-          <a href={url('/products?featured=true')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/products?featured=true')} class="text-sm font-semibold hover:underline underline-offset-2" style="color: var(--color-accent)">
             See all →
           </a>
         </div>
-        <ProductGrid products={featuredProducts} />
+        <ProductGrid products={featuredProducts} gridClassName="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7" />
       </div>
     </section>
   )}
@@ -175,14 +265,14 @@ try {
       <div class="container-content">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">New</p>
-            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Trending Discoveries</h2>
+            <p class="text-xs md:text-sm font-semibold uppercase tracking-wider mb-1" style="color: var(--color-accent)">New</p>
+            <h2 class="font-display text-2xl md:text-3xl lg:text-4xl font-bold" style="color: var(--color-text-1)">Trending Discoveries</h2>
           </div>
-          <a href={url('/products')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/products')} class="text-sm font-semibold hover:underline underline-offset-2" style="color: var(--color-accent)">
             See all →
           </a>
         </div>
-        <ProductGrid products={recentProducts} />
+        <ProductGrid products={recentProducts} gridClassName="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7" />
       </div>
     </section>
   )}

@@ -54,20 +54,20 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
             <button
               onClick={() => setActive(i => Math.max(0, i - 1))}
               disabled={active === 0}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center disabled:opacity-30 transition-opacity"
-              style={{ background: 'var(--color-surface)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--color-border)' }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center disabled:opacity-30 transition-all hover:scale-105 active:scale-95"
+              style={{ background: 'var(--color-surface)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--color-border)' }}
               aria-label="Previous image"
             >
-              <ChevronLeft size={16} style={{ color: 'var(--color-text-1)' }} />
+              <ChevronLeft size={20} style={{ color: 'var(--color-text-1)' }} />
             </button>
             <button
               onClick={() => setActive(i => Math.min(images.length - 1, i + 1))}
               disabled={active === images.length - 1}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center disabled:opacity-30 transition-opacity"
-              style={{ background: 'var(--color-surface)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--color-border)' }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center disabled:opacity-30 transition-all hover:scale-105 active:scale-95"
+              style={{ background: 'var(--color-surface)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--color-border)' }}
               aria-label="Next image"
             >
-              <ChevronRight size={16} style={{ color: 'var(--color-text-1)' }} />
+              <ChevronRight size={20} style={{ color: 'var(--color-text-1)' }} />
             </button>
           </>
         )}
@@ -75,12 +75,12 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
 
       {/* Thumbnails */}
       {images.length > 1 && (
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2.5 flex-wrap pt-1">
           {images.map((img, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
-              className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 transition-all"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 transition-all hover:opacity-95"
               style={{
                 border: `2px solid ${i === active ? 'var(--color-accent)' : 'var(--color-border)'}`,
                 background: 'var(--color-overlay)',
@@ -92,7 +92,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
                 <img
                   src={img.url}
                   alt={img.alt || `Thumbnail ${i + 1}`}
-                  className="w-full h-full object-contain p-1"
+                  className="w-full h-full object-contain p-1.5"
                   loading="lazy"
                   onError={() => setImgErrors(prev => ({ ...prev, [i]: true }))}
                 />

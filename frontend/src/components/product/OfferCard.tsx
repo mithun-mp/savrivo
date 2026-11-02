@@ -84,11 +84,11 @@ export default function OfferCard({ offer }: OfferCardProps) {
         href={offer.affiliateUrl}
         target="_blank"
         rel="sponsored nofollow noopener noreferrer"
-        className="flex items-center justify-center gap-2 py-3 px-5 rounded-lg font-semibold text-sm text-white transition-opacity hover:opacity-90 active:scale-95"
+        className="flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl font-semibold text-base text-white transition-all hover:opacity-90 active:scale-[0.98] min-h-[48px] shadow-sv-sm"
         style={{ background: 'var(--color-accent)' }}
       >
         Shop at {merchant?.name || 'Retailer'}
-        <ExternalLink size={14} aria-hidden="true" />
+        <ExternalLink size={16} aria-hidden="true" />
       </a>
 
       <AffiliateDisclosure compact />

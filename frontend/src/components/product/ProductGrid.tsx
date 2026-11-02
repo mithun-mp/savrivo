@@ -12,6 +12,7 @@ interface ProductGridProps {
   emptyTitle?: string;
   emptyDescription?: string;
   skeletonCount?: number;
+  gridClassName?: string;
 }
 
 export default function ProductGrid({
@@ -21,6 +22,7 @@ export default function ProductGrid({
   emptyTitle = 'No products found',
   emptyDescription = 'Try adjusting your filters or check back later.',
   skeletonCount = 8,
+  gridClassName = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-7',
 }: ProductGridProps) {
   if (error) {
     return (
@@ -35,7 +37,7 @@ export default function ProductGrid({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className={`grid ${gridClassName}`}>
         {Array.from({ length: skeletonCount }).map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
@@ -58,7 +60,7 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className={`grid ${gridClassName}`}>
       {products.map(p => (
         <ProductCard key={p._id} product={p} />
       ))}

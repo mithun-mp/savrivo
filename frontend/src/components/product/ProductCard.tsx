@@ -71,31 +71,31 @@ export default function ProductCard({ product }: ProductCardProps) {
       </a>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-4">
+      <div className="flex flex-col flex-1 p-5">
         {product.brand && (
-          <p className="text-xs font-medium uppercase tracking-widest mb-1" style={{ color: 'var(--color-text-2)' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'var(--color-text-2)' }}>
             {product.brand}
           </p>
         )}
         <a href={url(`/product/${product.slug}`)}>
           <h3
-            className="font-display text-base font-semibold mb-2 line-clamp-2 leading-snug hover:underline underline-offset-2"
+            className="font-sans text-base md:text-[17px] font-semibold mb-2 line-clamp-2 leading-snug hover:underline underline-offset-2"
             style={{ color: 'var(--color-text-1)' }}
           >
             {product.title}
           </h3>
         </a>
         {product.shortDescription && (
-          <p className="text-sm line-clamp-2 flex-1" style={{ color: 'var(--color-text-2)' }}>
+          <p className="text-sm line-clamp-2 leading-relaxed mb-4 flex-1" style={{ color: 'var(--color-text-2)' }}>
             {product.shortDescription}
           </p>
         )}
 
         {/* Footer */}
-        <div className="mt-4 pt-4 flex items-center justify-between gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
+        <div className="mt-auto pt-4 flex items-center justify-between gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
           <a
             href={url(`/product/${product.slug}`)}
-            className="text-sm font-semibold hover:underline underline-offset-2"
+            className="text-sm font-semibold py-1 hover:underline underline-offset-2"
             style={{ color: 'var(--color-accent)' }}
           >
             View Details

@@ -27,7 +27,7 @@ export default {
         'sv-lg': 'var(--shadow-lg)',
       },
       maxWidth: {
-        'content': '1280px',
+        'content': '1440px',
       },
     },
   },
