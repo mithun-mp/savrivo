@@ -24,9 +24,11 @@ if (process.platform === 'win32') {
   }
 }
 
+const base = process.env.ASTRO_BASE || (process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '/savrivo');
+
 export default defineConfig({
   site: 'https://mithun-mp.github.io',
-  base: '/savrivo',
+  base,
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
