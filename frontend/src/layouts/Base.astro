@@ -1,0 +1,85 @@
+---
+import ThemeScript from '../components/ThemeScript.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  noindex?: boolean;
+  structuredData?: object;
+}
+
+const {
+  title,
+  description = 'SAVRIVO helps you discover curated products across trusted Indian retailers. Smart Finds. Better Choices.',
+  canonicalUrl,
+  ogImage = '/og-default.jpg',
+  ogType = 'website',
+  noindex = false,
+  structuredData,
+} = Astro.props;
+
+const siteTitle = title.includes('SAVRIVO') ? title : `${title} | SAVRIVO`;
+const resolvedCanonical = canonicalUrl ?? Astro.url.href;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Prevent theme flash — must be first -->
+    <ThemeScript />
+
+    <!-- Primary SEO -->
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={resolvedCanonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={resolvedCanonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="SAVRIVO" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Font preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Structured Data -->
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+
+    <!-- Organization schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SAVRIVO",
+      "url": "https://savrivo.in",
+      "description": "SAVRIVO is an independent multi-retailer affiliate product discovery platform for India.",
+      "logo": "https://savrivo.in/favicon.svg"
+    })} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+

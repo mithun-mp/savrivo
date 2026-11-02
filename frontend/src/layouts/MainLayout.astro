@@ -1,0 +1,29 @@
+---
+import Base from './Base.astro';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+
+export interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  noindex?: boolean;
+  structuredData?: object;
+}
+
+const props = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<Base {...props}>
+  <div class="min-h-screen flex flex-col" style="background:var(--color-bg)">
+    <Navbar currentPath={currentPath} client:load />
+    <main id="main-content" class="flex-1 page-enter">
+      <slot />
+    </main>
+    <Footer />
+  </div>
+</Base>
+

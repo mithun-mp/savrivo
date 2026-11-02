@@ -1,0 +1,39 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProductsBrowser from '../../components/product/ProductsBrowser';
+import type { Category } from '../../types';
+
+const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+
+let categories: Category[] = [];
+try {
+  const res = await fetch(`${API_BASE}/categories`, { signal: AbortSignal.timeout(5000) });
+  if (res.ok) { const json = await res.json(); categories = json.data || []; }
+} catch {}
+---
+
+<MainLayout
+  title="All Products — SAVRIVO"
+  description="Browse and discover curated products across categories. Filter by brand, category, and more."
+  canonicalUrl="https://savrivo.in/products"
+>
+  <div class="section">
+    <div class="container-content">
+      <div class="mb-10">
+        <nav class="text-xs mb-4" style="color: var(--color-text-2)">
+          <a href="/" class="hover:underline">Home</a>
+          <span class="mx-2">›</span>
+          <span style="color: var(--color-text-1)">Products</span>
+        </nav>
+        <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color: var(--color-text-1)">
+          All Products
+        </h1>
+        <p class="text-base" style="color: var(--color-text-2)">
+          Curated picks across categories — find what suits you.
+        </p>
+      </div>
+      <ProductsBrowser initialCategories={categories} client:load />
+    </div>
+  </div>
+</MainLayout>
+

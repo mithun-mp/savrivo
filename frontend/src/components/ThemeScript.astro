@@ -1,0 +1,14 @@
+---
+// Anti-flash theme script — must run before any HTML renders
+---
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('savrivo-theme');
+      var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      var theme = (stored === 'light' || stored === 'dark') ? stored : preferred;
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
+

@@ -1,0 +1,101 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Category Management">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Categories</h1>
+        <p class="text-xs" style="color: var(--color-text-2)">Create and organize product categories.</p>
+      </div>
+      <button id="add-cat-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+        + Add Category
+      </button>
+    </div>
+
+    <!-- Create Modal / Inline Form -->
+    <div id="cat-form-box" class="hidden p-6 rounded-xl border space-y-4" style="background: var(--color-surface); border-color: var(--color-border)">
+      <h2 class="text-sm font-semibold" style="color: var(--color-text-1)">Add New Category</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Name *</label>
+          <input type="text" id="cat-name" placeholder="e.g. Home & Kitchen" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Icon Name (Lucide)</label>
+          <input type="text" id="cat-icon" placeholder="e.g. Home, Cpu, Sparkles" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Description</label>
+        <textarea id="cat-desc" rows="2" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
+      </div>
+      <div class="flex gap-2">
+        <button id="cat-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save</button>
+        <button id="cat-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+            <th class="p-4">Name</th>
+            <th class="p-4">Slug</th>
+            <th class="p-4">Description</th>
+            <th class="p-4">Active</th>
+          </tr>
+        </thead>
+        <tbody id="cat-tbody">
+          <tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading categories...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+
+  async function load() {
+    const tbody = document.getElementById('cat-tbody');
+    try {
+      const res: any = await api.admin.categories.list();
+      const list = res.data || [];
+      if (!tbody) return;
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">No categories found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map((c: any) => `
+        <tr class="border-b" style="border-color: var(--color-border)">
+          <td class="p-4 font-medium" style="color: var(--color-text-1)">${c.name}</td>
+          <td class="p-4 font-mono text-xs" style="color: var(--color-text-2)">${c.slug}</td>
+          <td class="p-4 text-xs" style="color: var(--color-text-2)">${c.description || '—'}</td>
+          <td class="p-4 text-xs">${c.active ? '✅ Active' : '❌ Inactive'}</td>
+        </tr>
+      `).join('');
+    } catch {
+      if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-xs text-red-600">Failed to load categories.</td></tr>';
+    }
+  }
+
+  const box = document.getElementById('cat-form-box');
+  document.getElementById('add-cat-btn')?.addEventListener('click', () => box?.classList.remove('hidden'));
+  document.getElementById('cat-cancel-btn')?.addEventListener('click', () => box?.classList.add('hidden'));
+
+  document.getElementById('cat-save-btn')?.addEventListener('click', async () => {
+    const name = (document.getElementById('cat-name') as HTMLInputElement).value;
+    const icon = (document.getElementById('cat-icon') as HTMLInputElement).value;
+    const description = (document.getElementById('cat-desc') as HTMLTextAreaElement).value;
+    if (!name) return;
+
+    await api.admin.categories.create({ name, icon, description });
+    box?.classList.add('hidden');
+    load();
+  });
+
+  load();
+</script>

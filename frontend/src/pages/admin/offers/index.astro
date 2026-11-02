@@ -1,0 +1,174 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Offer Management">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Product Offers</h1>
+        <p class="text-xs" style="color: var(--color-text-2)">Manage affiliate links and external retailer destinations for products.</p>
+      </div>
+      <button id="add-offer-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+        + Add Offer
+      </button>
+    </div>
+
+    <!-- Add Offer Modal/Box -->
+    <div id="offer-form-box" class="hidden p-6 rounded-xl border space-y-4" style="background: var(--color-surface); border-color: var(--color-border)">
+      <h2 class="text-sm font-semibold" style="color: var(--color-text-1)">Add Product Offer</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Product *</label>
+          <select id="o-product" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+            <option value="">Select Product</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Merchant *</label>
+          <select id="o-merchant" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+            <option value="">Select Merchant</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Destination Product URL *</label>
+        <input type="url" id="o-url" placeholder="https://www.amazon.in/dp/..." class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Affiliate Tracking URL *</label>
+        <input type="url" id="o-aff-url" placeholder="https://www.amazon.in/dp/...?tag=..." class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Current Indicative Price (₹)</label>
+          <input type="number" id="o-price" placeholder="e.g. 19999" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Availability</label>
+          <select id="o-avail" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+            <option value="unknown">Check at Retailer</option>
+            <option value="in_stock">In Stock</option>
+            <option value="out_of_stock">Out of Stock</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button id="o-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save Offer</button>
+        <button id="o-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+            <th class="p-4">Product</th>
+            <th class="p-4">Merchant</th>
+            <th class="p-4">Price</th>
+            <th class="p-4">Status</th>
+            <th class="p-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="offers-tbody">
+          <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading offers...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+
+  async function loadData() {
+    try {
+      const [prodsRes, merchRes]: any = await Promise.all([
+        api.admin.products.list('limit=100'),
+        api.admin.merchants.list(),
+      ]);
+      const pSelect = document.getElementById('o-product') as HTMLSelectElement;
+      const mSelect = document.getElementById('o-merchant') as HTMLSelectElement;
+
+      if (pSelect && prodsRes.data) {
+        pSelect.innerHTML = '<option value="">Select Product</option>' +
+          prodsRes.data.map((p: any) => `<option value="${p._id}">${p.title}</option>`).join('');
+      }
+      if (mSelect && merchRes.data) {
+        mSelect.innerHTML = '<option value="">Select Merchant</option>' +
+          merchRes.data.map((m: any) => `<option value="${m._id}">${m.name}</option>`).join('');
+      }
+    } catch {}
+
+    const tbody = document.getElementById('offers-tbody');
+    try {
+      const res: any = await api.admin.offers.list();
+      const list = res.data || [];
+      if (!tbody) return;
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">No offers linked yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map((o: any) => `
+        <tr class="border-b" style="border-color: var(--color-border)">
+          <td class="p-4 font-medium" style="color: var(--color-text-1)">${o.productId?.title || '—'}</td>
+          <td class="p-4 text-xs font-semibold" style="color: var(--color-accent)">${o.merchantId?.name || '—'}</td>
+          <td class="p-4 text-xs">${o.currentPrice ? `₹${o.currentPrice}` : 'At retailer'}</td>
+          <td class="p-4 text-xs">
+            <span class="px-2 py-0.5 rounded-full ${o.status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+              ${o.status}
+            </span>
+          </td>
+          <td class="p-4 text-right">
+            ${o.status === 'active' ? `<button data-expire-id="${o._id}" class="text-xs text-red-600 hover:underline">Expire</button>` : '—'}
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('[data-expire-id]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = (e.currentTarget as HTMLElement).getAttribute('data-expire-id');
+          if (id && confirm('Expire this offer?')) {
+            await api.admin.offers.expire(id);
+            loadData();
+          }
+        });
+      });
+    } catch {
+      if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-xs text-red-600">Failed to load offers.</td></tr>';
+    }
+  }
+
+  const box = document.getElementById('offer-form-box');
+  document.getElementById('add-offer-btn')?.addEventListener('click', () => box?.classList.remove('hidden'));
+  document.getElementById('o-cancel-btn')?.addEventListener('click', () => box?.classList.add('hidden'));
+
+  document.getElementById('o-save-btn')?.addEventListener('click', async () => {
+    const productId = (document.getElementById('o-product') as HTMLSelectElement).value;
+    const merchantId = (document.getElementById('o-merchant') as HTMLSelectElement).value;
+    const productUrl = (document.getElementById('o-url') as HTMLInputElement).value;
+    const affiliateUrl = (document.getElementById('o-aff-url') as HTMLInputElement).value;
+    const priceVal = (document.getElementById('o-price') as HTMLInputElement).value;
+    const availability = (document.getElementById('o-avail') as HTMLSelectElement).value;
+
+    if (!productId || !merchantId || !productUrl || !affiliateUrl) {
+      alert('Please fill all required fields');
+      return;
+    }
+
+    await api.admin.offers.create({
+      productId,
+      merchantId,
+      productUrl,
+      affiliateUrl,
+      currentPrice: priceVal ? Number(priceVal) : undefined,
+      availability,
+      sourceType: 'manual',
+    });
+    box?.classList.add('hidden');
+    loadData();
+  });
+
+  loadData();
+</script>

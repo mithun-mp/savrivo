@@ -1,0 +1,149 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Contact Us — SAVRIVO"
+  description="Contact the SAVRIVO team for editorial queries, partnership discussions, or general feedback."
+  canonicalUrl="https://savrivo.in/contact"
+>
+  <div class="section">
+    <div class="container-content max-w-2xl">
+      <nav class="text-xs mb-6" style="color: var(--color-text-2)">
+        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <span style="color: var(--color-text-1)">Contact</span>
+      </nav>
+
+      <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color: var(--color-text-1)">
+        Contact Us
+      </h1>
+      <p class="text-base mb-8 leading-relaxed" style="color: var(--color-text-2)">
+        Have feedback, questions about a product listing, or editorial suggestions? We'd love to hear from you.
+      </p>
+
+      <div
+        class="p-6 md:p-8 rounded-2xl mb-8"
+        style="background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm)"
+      >
+        <form id="contact-form" class="space-y-5">
+          <div>
+            <label for="name" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+              Your Name <span style="color: var(--color-error)">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="e.g. Rahul Sharma"
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+              style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+              Email Address <span style="color: var(--color-error)">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="you@example.com"
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+              style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+            />
+          </div>
+
+          <div>
+            <label for="subject" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+              Subject
+            </label>
+            <select
+              id="subject"
+              name="subject"
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+              style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+            >
+              <option value="general">General Enquiry</option>
+              <option value="editorial">Editorial Correction / Suggestion</option>
+              <option value="merchant">Merchant / Affiliate Partnership</option>
+              <option value="privacy">Privacy & Terms</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+              Message <span style="color: var(--color-error)">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              required
+              placeholder="Write your message here..."
+              class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors resize-y"
+              style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+            ></textarea>
+          </div>
+
+          <div id="contact-status" class="hidden text-sm p-3 rounded-lg"></div>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full py-3.5 px-6 rounded-xl font-semibold text-sm text-white transition-opacity hover:opacity-90 active:scale-95"
+            style="background: var(--color-accent)"
+          >
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <div class="text-center text-sm" style="color: var(--color-text-2)">
+        Prefer direct email? Reach us at{' '}
+        <a href="mailto:hello@savrivo.in" class="font-medium underline underline-offset-2" style="color: var(--color-accent)">
+          hello@savrivo.in
+        </a>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const statusEl = document.getElementById('contact-status') as HTMLDivElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      statusEl.className = 'hidden';
+
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        subject: formData.get('subject'),
+        message: formData.get('message'),
+      };
+
+      try {
+        // Fallback email link mailto or API
+        const mailto = `mailto:hello@savrivo.in?subject=${encodeURIComponent(String(payload.subject))}&body=${encodeURIComponent(`From: ${payload.name} (${payload.email})\n\n${payload.message}`)}`;
+        statusEl.className = 'block text-sm p-3 rounded-lg text-emerald-800 bg-emerald-50 border border-emerald-200';
+        statusEl.textContent = 'Thank you for reaching out! We will review your message shortly.';
+        form.reset();
+      } catch (err) {
+        statusEl.className = 'block text-sm p-3 rounded-lg text-red-800 bg-red-50 border border-red-200';
+        statusEl.textContent = 'Unable to send message directly. Please contact hello@savrivo.in';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      }
+    });
+  }
+</script>

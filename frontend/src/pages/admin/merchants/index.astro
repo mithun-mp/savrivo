@@ -1,0 +1,123 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Merchant Management">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Merchants & Retailers</h1>
+        <p class="text-xs" style="color: var(--color-text-2)">Configure approved external merchants (Amazon India, Flipkart, etc.).</p>
+      </div>
+      <button id="add-merchant-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+        + Add Merchant
+      </button>
+    </div>
+
+    <!-- Merchant Form -->
+    <div id="merchant-form-box" class="hidden p-6 rounded-xl border space-y-4" style="background: var(--color-surface); border-color: var(--color-border)">
+      <h2 class="text-sm font-semibold" style="color: var(--color-text-1)">Add New Merchant</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Merchant Name *</label>
+          <input type="text" id="m-name" placeholder="e.g. Amazon India" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Website URL *</label>
+          <input type="url" id="m-url" placeholder="https://www.amazon.in" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Affiliate Programme Name</label>
+        <input type="text" id="m-program" placeholder="e.g. Amazon Associates" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+      </div>
+      <div class="flex gap-2">
+        <button id="m-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save Merchant</button>
+        <button id="m-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+            <th class="p-4">Merchant</th>
+            <th class="p-4">Official Website</th>
+            <th class="p-4">Programme</th>
+            <th class="p-4">Status</th>
+            <th class="p-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="merchants-tbody">
+          <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading merchants...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+
+  async function load() {
+    const tbody = document.getElementById('merchants-tbody');
+    try {
+      const res: any = await api.admin.merchants.list();
+      const list = res.data || [];
+      if (!tbody) return;
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">No merchants configured yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map((m: any) => `
+        <tr class="border-b" style="border-color: var(--color-border)">
+          <td class="p-4 font-semibold" style="color: var(--color-text-1)">${m.name}</td>
+          <td class="p-4 text-xs">
+            <a href="${m.websiteUrl}" target="_blank" class="hover:underline" style="color: var(--color-accent)">${m.websiteUrl} ↗</a>
+          </td>
+          <td class="p-4 text-xs" style="color: var(--color-text-2)">${m.affiliateProgramName || '—'}</td>
+          <td class="p-4 text-xs">
+            <span class="px-2 py-0.5 rounded-full ${m.enabled ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700'}">
+              ${m.enabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </td>
+          <td class="p-4 text-right">
+            <button data-toggle-id="${m._id}" class="text-xs font-medium hover:underline" style="color: var(--color-accent)">
+              ${m.enabled ? 'Disable' : 'Enable'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('[data-toggle-id]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = (e.currentTarget as HTMLElement).getAttribute('data-toggle-id');
+          if (id) {
+            await api.admin.merchants.toggle(id);
+            load();
+          }
+        });
+      });
+    } catch {
+      if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-xs text-red-600">Failed to load merchants.</td></tr>';
+    }
+  }
+
+  const box = document.getElementById('merchant-form-box');
+  document.getElementById('add-merchant-btn')?.addEventListener('click', () => box?.classList.remove('hidden'));
+  document.getElementById('m-cancel-btn')?.addEventListener('click', () => box?.classList.add('hidden'));
+
+  document.getElementById('m-save-btn')?.addEventListener('click', async () => {
+    const name = (document.getElementById('m-name') as HTMLInputElement).value;
+    const websiteUrl = (document.getElementById('m-url') as HTMLInputElement).value;
+    const affiliateProgramName = (document.getElementById('m-program') as HTMLInputElement).value;
+    if (!name || !websiteUrl) return;
+
+    await api.admin.merchants.create({ name, websiteUrl, affiliateProgramName });
+    box?.classList.add('hidden');
+    load();
+  });
+
+  load();
+</script>

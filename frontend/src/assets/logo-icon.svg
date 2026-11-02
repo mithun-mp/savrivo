@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img" aria-label="SAVRIVO">
+  <path d="M32 8 C24 8 16 12 16 20 C16 26 21 29 28 31 L32 32 C39 34 44 37 44 43 C44 49 38 48 32 48 C26 48 20 45 18 40" 
+        stroke="#1C4532" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <circle cx="30" cy="20" r="3" fill="#C9A96E" opacity="0.8"/>
+  <circle cx="34" cy="40" r="3" fill="#1C4532" opacity="0.5"/>
+</svg>
+

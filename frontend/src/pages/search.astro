@@ -1,0 +1,22 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SearchResults from '../components/search/SearchResults';
+
+const q = Astro.url.searchParams.get('q') || '';
+---
+
+<MainLayout
+  title={q ? `Search: "${q}" — SAVRIVO` : 'Search — SAVRIVO'}
+  description="Search SAVRIVO for products, buying guides, and categories."
+  noindex={true}
+>
+  <div class="section">
+    <div class="container-content max-w-3xl">
+      <h1 class="font-display text-2xl font-bold mb-8" style="color: var(--color-text-1)">
+        {q ? `Results for "${q}"` : 'Search SAVRIVO'}
+      </h1>
+      <SearchResults initialQuery={q} client:load />
+    </div>
+  </div>
+</MainLayout>
+

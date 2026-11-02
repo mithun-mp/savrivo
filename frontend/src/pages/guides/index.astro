@@ -1,0 +1,35 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import GuideCard from '../../components/guide/GuideCard';
+import type { Guide } from '../../types';
+
+const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+let guides: Guide[] = [];
+try {
+  const res = await fetch(`${API_BASE}/guides?limit=50`, { signal: AbortSignal.timeout(5000) });
+  if (res.ok) { const json = await res.json(); guides = json.data || []; }
+} catch {}
+---
+
+<MainLayout title="Buying Guides — SAVRIVO" description="Expert buying guides to help you choose the right products. Read our independent research." canonicalUrl="https://savrivo.in/guides">
+  <div class="section">
+    <div class="container-content">
+      <nav class="text-xs mb-4" style="color: var(--color-text-2)">
+        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <span style="color: var(--color-text-1)">Buying Guides</span>
+      </nav>
+      <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color: var(--color-text-1)">Buying Guides</h1>
+      <p class="text-base mb-10" style="color: var(--color-text-2)">
+        Independent research to help you make smarter purchase decisions.
+      </p>
+      {guides.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {guides.map(g => <GuideCard guide={g} />)}
+        </div>
+      ) : (
+        <p class="text-sm" style="color: var(--color-text-2)">Buying guides are being prepared. Check back soon.</p>
+      )}
+    </div>
+  </div>
+</MainLayout>
+

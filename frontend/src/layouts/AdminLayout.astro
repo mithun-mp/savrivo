@@ -1,0 +1,81 @@
+---
+import Base from './Base.astro';
+
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<Base title={title} noindex={true}>
+  <div class="min-h-screen flex" style="background:var(--color-bg)">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-60 shrink-0 border-r" style="background:var(--color-surface);border-color:var(--color-border)">
+      <div class="p-5 border-b" style="border-color:var(--color-border)">
+        <a href="/admin" class="flex items-center gap-2 font-bold tracking-widest text-sm" style="color:var(--color-accent)">
+          SAVRIVO <span class="text-xs font-normal opacity-60" style="color:var(--color-text-2)">Admin</span>
+        </a>
+      </div>
+      <nav class="flex-1 p-4 space-y-1 text-sm">
+        <a href="/admin" class="admin-nav-link" data-path="/admin">Dashboard</a>
+        <a href="/admin/products" class="admin-nav-link" data-path="/admin/products">Products</a>
+        <a href="/admin/categories" class="admin-nav-link" data-path="/admin/categories">Categories</a>
+        <a href="/admin/merchants" class="admin-nav-link" data-path="/admin/merchants">Merchants</a>
+        <a href="/admin/offers" class="admin-nav-link" data-path="/admin/offers">Offers</a>
+        <a href="/admin/guides" class="admin-nav-link" data-path="/admin/guides">Buying Guides</a>
+        <a href="/admin/settings" class="admin-nav-link" data-path="/admin/settings">Settings</a>
+      </nav>
+      <div class="p-4 border-t" style="border-color:var(--color-border)">
+        <a href="/" class="text-xs" style="color:var(--color-text-2)">← View Site</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="flex items-center justify-between px-6 py-4 border-b" style="background:var(--color-surface);border-color:var(--color-border)">
+        <h1 class="text-base font-semibold" style="color:var(--color-text-1)">{title}</h1>
+        <div id="admin-user-display" class="text-sm" style="color:var(--color-text-2)"></div>
+      </header>
+      <main class="flex-1 p-6 overflow-auto">
+        <slot />
+      </main>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .admin-nav-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-2);
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+  .admin-nav-link:hover, .admin-nav-link.active {
+    background: var(--color-overlay);
+    color: var(--color-text-1);
+  }
+</style>
+
+<script define:vars={{ currentPath }}>
+  // Highlight active nav link
+  document.querySelectorAll('.admin-nav-link').forEach(link => {
+    if (link.getAttribute('data-path') === currentPath ||
+        (currentPath.startsWith(link.getAttribute('data-path') + '/') && link.getAttribute('data-path') !== '/admin')) {
+      link.classList.add('active');
+    }
+  });
+  // Show admin user
+  try {
+    const token = localStorage.getItem('savrivo-admin-token');
+    const email = localStorage.getItem('savrivo-admin-email');
+    if (!token) { window.location.href = '/admin/login'; }
+    else if (email) {
+      const el = document.getElementById('admin-user-display');
+      if (el) el.textContent = email;
+    }
+  } catch (e) {}
+</script>
+

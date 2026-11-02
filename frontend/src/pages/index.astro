@@ -1,0 +1,244 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SearchBar from '../components/search/SearchBar';
+import ProductGrid from '../components/product/ProductGrid';
+import GuideCard from '../components/guide/GuideCard';
+import AffiliateDisclosure from '../components/ui/AffiliateDisclosure';
+import type { Category, Product, Guide } from '../types';
+
+// Gracefully fetch data at build time — fall back to empty on error
+let categories: Category[] = [];
+let featuredProducts: Product[] = [];
+let recentProducts: Product[] = [];
+let guides: Guide[] = [];
+
+const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+
+async function safeFetch<T>(url: string): Promise<T[]> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
+}
+
+try {
+  [categories, featuredProducts, recentProducts, guides] = await Promise.all([
+    safeFetch<Category>(`${API_BASE}/categories`),
+    safeFetch<Product>(`${API_BASE}/products?featured=true&limit=8`),
+    safeFetch<Product>(`${API_BASE}/products?limit=8`),
+    safeFetch<Guide>(`${API_BASE}/guides?limit=3`),
+  ]);
+} catch {}
+---
+
+<MainLayout
+  title="SAVRIVO — Smart Finds. Better Choices."
+  description="Discover and compare products across trusted Indian retailers. SAVRIVO is your independent product discovery companion."
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SAVRIVO",
+    "url": "https://savrivo.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": { "@type": "EntryPoint", "urlTemplate": "https://savrivo.in/search?q={search_term_string}" },
+      "query-input": "required name=search_term_string"
+    }
+  }}
+>
+  <!-- ── HERO ── -->
+  <section
+    class="relative overflow-hidden py-24 md:py-32"
+    style="background: var(--color-bg)"
+  >
+    <div class="container-content relative z-10">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] mb-6" style="color: var(--color-accent)">
+          Smart Finds. Better Choices.
+        </p>
+        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style="color: var(--color-text-1)">
+          Find better products.<br />
+          <span style="color: var(--color-accent)">Make smarter choices.</span>
+        </h1>
+        <p class="text-lg leading-relaxed mb-10 max-w-xl" style="color: var(--color-text-2)">
+          SAVRIVO helps you discover curated products across trusted Indian retailers. We research, compare, and guide — you choose where to buy.
+        </p>
+
+        <!-- Search bar -->
+        <div class="mb-8 max-w-lg">
+          <SearchBar client:load fullWidth={true} placeholder="Search products, guides, categories…" />
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="/products"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            style="background: var(--color-accent)"
+          >
+            Explore Products
+          </a>
+          <a
+            href="/guides"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border transition-colors hover:opacity-80"
+            style="border-color: var(--color-border); color: var(--color-text-1)"
+          >
+            Discover Buying Guides
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Decorative element -->
+    <div class="absolute right-0 top-0 w-1/2 h-full pointer-events-none overflow-hidden opacity-30" aria-hidden="true">
+      <div class="absolute top-16 right-16 w-72 h-72 rounded-full" style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%); opacity: 0.1;"></div>
+      <div class="absolute bottom-16 right-32 w-48 h-48 rounded-full" style="background: radial-gradient(circle, var(--color-accent-2) 0%, transparent 70%); opacity: 0.15;"></div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border)">
+    <div class="container-content">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { step: '01', title: 'We Discover', desc: 'We research and curate products across categories — saving you time.' },
+          { step: '02', title: 'You Compare', desc: 'View product details, specifications, and available merchant offers in one place.' },
+          { step: '03', title: 'Buy at the Official Store', desc: 'Click Shop Now and complete your purchase directly on the retailer\'s website.' },
+        ].map(({ step, title, desc }) => (
+          <div class="flex flex-col gap-3">
+            <span class="text-3xl font-display font-bold" style="color: var(--color-accent); opacity: 0.4">{step}</span>
+            <h3 class="text-base font-semibold" style="color: var(--color-text-1)">{title}</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--color-text-2)">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CATEGORIES ── -->
+  {categories.length > 0 && (
+    <section class="section">
+      <div class="container-content">
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Browse</p>
+            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Featured Categories</h2>
+          </div>
+          <a href="/categories" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+            View all →
+          </a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+          {categories.slice(0, 7).map(cat => (
+            <a
+              href={`/category/${cat.slug}`}
+              class="flex flex-col items-center gap-2 p-4 rounded-xl text-center transition-all card-hover"
+              style="background: var(--color-surface); border: 1px solid var(--color-border)"
+            >
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"/>
+                </svg>
+              </div>
+              <span class="text-xs font-medium" style="color: var(--color-text-1)">{cat.name}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── EDITOR'S PICKS ── -->
+  {featuredProducts.length > 0 && (
+    <section class="section" style="background: var(--color-surface); border-top: 1px solid var(--color-border)">
+      <div class="container-content">
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Curated</p>
+            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Editor's Picks</h2>
+          </div>
+          <a href="/products?featured=true" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+            See all →
+          </a>
+        </div>
+        <ProductGrid products={featuredProducts} />
+      </div>
+    </section>
+  )}
+
+  <!-- ── RECENTLY ADDED ── -->
+  {recentProducts.length > 0 && (
+    <section class="section">
+      <div class="container-content">
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">New</p>
+            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Trending Discoveries</h2>
+          </div>
+          <a href="/products" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+            See all →
+          </a>
+        </div>
+        <ProductGrid products={recentProducts} />
+      </div>
+    </section>
+  )}
+
+  <!-- ── BUYING GUIDES ── -->
+  {guides.length > 0 && (
+    <section class="section" style="background: var(--color-surface); border-top: 1px solid var(--color-border)">
+      <div class="container-content">
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Guides</p>
+            <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Buying Guides</h2>
+          </div>
+          <a href="/guides" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+            All guides →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {guides.map(g => <GuideCard guide={g} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── COMING SOON: LIVE OFFERS ── -->
+  <section class="section">
+    <div class="container-content">
+      <div class="max-w-xl mx-auto text-center">
+        <!-- Savi discovery mark -->
+        <div class="mx-auto mb-8 w-16 h-16 opacity-70">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <circle cx="32" cy="32" r="28" stroke="var(--color-accent)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.3"/>
+            <circle cx="32" cy="32" r="16" fill="var(--color-accent)" opacity="0.06"/>
+            <circle cx="32" cy="32" r="5" fill="var(--color-accent)" opacity="0.6"/>
+            <line x1="32" y1="17" x2="32" y2="23" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="32" y1="41" x2="32" y2="47" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+            <line x1="17" y1="32" x2="23" y2="32" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+            <line x1="41" y1="32" x2="47" y2="32" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+          </svg>
+        </div>
+        <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: var(--color-accent)">Coming Soon</p>
+        <h2 class="font-display text-2xl md:text-3xl font-bold mb-4" style="color: var(--color-text-1)">Live Offer Discovery</h2>
+        <p class="text-base leading-relaxed mb-6" style="color: var(--color-text-2)">
+          We're building a verified way to compare product offers across trusted retailers. Live offer discovery is on its way.
+        </p>
+        <a href="/offers" class="inline-flex items-center gap-2 text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          Learn more about offers →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AFFILIATE DISCLOSURE ── -->
+  <section class="pb-16">
+    <div class="container-content max-w-2xl">
+      <AffiliateDisclosure />
+    </div>
+  </section>
+</MainLayout>
+

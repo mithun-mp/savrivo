@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Admin Login — SAVRIVO" noindex={true}>
+  <div class="min-h-screen flex items-center justify-center p-4" style="background: var(--color-bg)">
+    <div
+      class="w-full max-w-md p-8 rounded-2xl"
+      style="background: var(--color-surface); border: 1px solid var(--color-border); box-shadow: var(--shadow-md)"
+    >
+      <div class="text-center mb-8">
+        <a href="/" class="inline-flex items-center gap-2 font-bold tracking-[0.2em] text-base mb-2" style="color: var(--color-accent)">
+          <svg width="24" height="24" viewBox="0 0 48 56" fill="none" aria-hidden="true">
+            <path d="M32 6 C22 6 14 11 14 19 C14 25 19 28 26 30 L30 31.5 C38 33.5 44 37 44 44 C44 51 37 50 30 50 C23 50 16 47 14 41"
+              stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <circle cx="28" cy="19" r="3" fill="var(--color-accent-2)" />
+          </svg>
+          SAVRIVO
+        </a>
+        <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Editorial Admin Portal</h1>
+        <p class="text-xs mt-1" style="color: var(--color-text-2)">Authorized personnel only. No public sign-up.</p>
+      </div>
+
+      <form id="admin-login-form" class="space-y-5">
+        <div>
+          <label for="email" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+            Admin Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            required
+            autocomplete="email"
+            placeholder="admin@savrivo.in"
+            class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+            style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+          />
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-text-1)">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            required
+            autocomplete="current-password"
+            placeholder="••••••••••••"
+            class="w-full px-4 py-3 rounded-xl text-sm outline-none transition-colors"
+            style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text-1)"
+          />
+        </div>
+
+        <div id="login-error" class="hidden text-xs p-3 rounded-lg text-red-800 bg-red-50 border border-red-200"></div>
+
+        <button
+          type="submit"
+          id="login-btn"
+          class="w-full py-3.5 px-6 rounded-xl font-semibold text-sm text-white transition-opacity hover:opacity-90 active:scale-95"
+          style="background: var(--color-accent)"
+        >
+          Sign In
+        </button>
+      </form>
+
+      <div class="mt-6 text-center">
+        <a href="/" class="text-xs hover:underline" style="color: var(--color-text-2)">← Return to SAVRIVO</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { api } from '../../lib/api';
+
+  const form = document.getElementById('admin-login-form') as HTMLFormElement;
+  const errorEl = document.getElementById('login-error') as HTMLDivElement;
+  const btn = document.getElementById('login-btn') as HTMLButtonElement;
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+      errorEl.className = 'hidden';
+
+      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+
+      try {
+        const res = await api.admin.login(email, password);
+        if (res.data?.token) {
+          localStorage.setItem('savrivo-admin-token', res.data.token);
+          localStorage.setItem('savrivo-admin-email', res.data.user.email);
+          window.location.href = '/admin';
+        } else {
+          throw new Error(res.message || 'Login failed');
+        }
+      } catch (err: any) {
+        errorEl.className = 'block text-xs p-3 rounded-lg text-red-800 bg-red-50 border border-red-200';
+        errorEl.textContent = err.message || 'Invalid credentials or server unavailable';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+  }
+</script>

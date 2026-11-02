@@ -1,0 +1,118 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Product Management">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Products</h1>
+        <p class="text-xs" style="color: var(--color-text-2)">Create, review, publish, and manage affiliate products.</p>
+      </div>
+      <a
+        href="/admin/products/new"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        style="background: var(--color-accent)"
+      >
+        + Create Product
+      </a>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="flex flex-wrap items-center gap-3 p-4 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <select id="filter-status" class="text-sm px-3 py-2 rounded-lg border outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+        <option value="">All Statuses</option>
+        <option value="published">Published</option>
+        <option value="draft">Draft</option>
+        <option value="archived">Archived</option>
+      </select>
+      <button id="refresh-btn" class="text-sm px-4 py-2 rounded-lg border ml-auto" style="border-color: var(--color-border); color: var(--color-text-1)">
+        Refresh
+      </button>
+    </div>
+
+    <!-- Products Table -->
+    <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+              <th class="p-4">Title</th>
+              <th class="p-4">Brand</th>
+              <th class="p-4">Category</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Featured</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <tr>
+              <td colspan="6" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading products...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+
+  async function loadProducts() {
+    const tbody = document.getElementById('products-table-body');
+    const statusSelect = document.getElementById('filter-status') as HTMLSelectElement;
+    const status = statusSelect ? statusSelect.value : '';
+
+    try {
+      const res: any = await api.admin.products.list(status ? `status=${status}` : '');
+      const products = res.data || [];
+
+      if (!tbody) return;
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-xs" style="color: var(--color-text-2)">No products found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = products.map((p: any) => `
+        <tr class="border-b transition-colors" style="border-color: var(--color-border)">
+          <td class="p-4 font-medium" style="color: var(--color-text-1)">
+            <a href="/product/${p.slug}" target="_blank" class="hover:underline flex items-center gap-1.5">
+              ${p.title} ↗
+            </a>
+          </td>
+          <td class="p-4 text-xs" style="color: var(--color-text-2)">${p.brand || '—'}</td>
+          <td class="p-4 text-xs" style="color: var(--color-text-2)">${p.categoryId?.name || '—'}</td>
+          <td class="p-4">
+            <span class="text-xs px-2 py-0.5 rounded-full ${p.status === 'published' ? 'bg-emerald-100 text-emerald-800' : p.status === 'draft' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700'}">
+              ${p.status}
+            </span>
+          </td>
+          <td class="p-4 text-xs">${p.featured ? '⭐ Yes' : 'No'}</td>
+          <td class="p-4 text-right space-x-2">
+            <a href="/admin/products/${p._id}" class="text-xs font-medium hover:underline" style="color: var(--color-accent)">Edit</a>
+            <button data-delete-id="${p._id}" class="text-xs text-red-600 hover:underline">Archive</button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('[data-delete-id]').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = (e.currentTarget as HTMLElement).getAttribute('data-delete-id');
+          if (id && confirm('Archive this product?')) {
+            await api.admin.products.delete(id);
+            loadProducts();
+          }
+        });
+      });
+    } catch (err) {
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-xs text-red-600">Failed to load products. Check server connection.</td></tr>';
+      }
+    }
+  }
+
+  document.getElementById('filter-status')?.addEventListener('change', loadProducts);
+  document.getElementById('refresh-btn')?.addEventListener('click', loadProducts);
+  loadProducts();
+</script>

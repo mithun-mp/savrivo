@@ -1,0 +1,100 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Platform Settings">
+  <div class="max-w-2xl space-y-6">
+    <div>
+      <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Platform Settings</h1>
+      <p class="text-xs" style="color: var(--color-text-2)">Configure site-wide metadata, contact address, and operational modes.</p>
+    </div>
+
+    <form id="settings-form" class="space-y-6">
+      <div class="p-6 rounded-xl border space-y-4" style="background: var(--color-surface); border-color: var(--color-border)">
+        <h2 class="text-sm font-semibold uppercase tracking-wider" style="color: var(--color-text-1)">General Settings</h2>
+
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Site Name</label>
+          <input type="text" id="siteName" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Tagline</label>
+          <input type="text" id="tagline" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Contact Email</label>
+          <input type="email" id="contactEmail" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Default Currency</label>
+          <input type="text" id="defaultCurrency" value="INR" readonly class="w-full px-4 py-2.5 rounded-lg border text-sm opacity-60" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        </div>
+      </div>
+
+      <div id="settings-msg" class="hidden text-xs p-3 rounded-lg"></div>
+
+      <button
+        type="submit"
+        id="save-settings-btn"
+        class="px-6 py-3 rounded-xl font-semibold text-sm text-white transition-opacity hover:opacity-90"
+        style="background: var(--color-accent)"
+      >
+        Save Settings
+      </button>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+
+  async function load() {
+    try {
+      const res: any = await api.admin.settings.get();
+      if (res.data) {
+        (document.getElementById('siteName') as HTMLInputElement).value = res.data.siteName || 'SAVRIVO';
+        (document.getElementById('tagline') as HTMLInputElement).value = res.data.tagline || 'Smart Finds. Better Choices.';
+        (document.getElementById('contactEmail') as HTMLInputElement).value = res.data.contactEmail || 'hello@savrivo.in';
+      }
+    } catch {}
+  }
+
+  const form = document.getElementById('settings-form') as HTMLFormElement;
+  const msg = document.getElementById('settings-msg') as HTMLDivElement;
+  const btn = document.getElementById('save-settings-btn') as HTMLButtonElement;
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const update = {
+        siteName: (document.getElementById('siteName') as HTMLInputElement).value,
+        tagline: (document.getElementById('tagline') as HTMLInputElement).value,
+        contactEmail: (document.getElementById('contactEmail') as HTMLInputElement).value,
+      };
+
+      try {
+        const res = await api.admin.settings.update(update);
+        if (res.success) {
+          msg.className = 'block text-xs p-3 rounded-lg text-emerald-800 bg-emerald-50 border border-emerald-200';
+          msg.textContent = 'Settings saved successfully!';
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err: any) {
+        msg.className = 'block text-xs p-3 rounded-lg text-red-800 bg-red-50 border border-red-200';
+        msg.textContent = err.message || 'Save failed';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Settings';
+      }
+    });
+  }
+
+  load();
+</script>

@@ -1,0 +1,58 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProductGrid from '../../components/product/ProductGrid';
+import GuideCard from '../../components/guide/GuideCard';
+import type { Category, Product, Guide } from '../../types';
+
+export async function getStaticPaths() {
+  const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+  try {
+    const res = await fetch(`${API_BASE}/categories`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data as Category[] || []).map(c => ({ params: { slug: c.slug }, props: { category: c } }));
+  } catch { return []; }
+}
+
+const { category } = Astro.props as { category: Category };
+const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+
+let products: Product[] = [];
+let guides: Guide[] = [];
+try {
+  const [pRes, gRes] = await Promise.all([
+    fetch(`${API_BASE}/products?category=${category._id}&limit=12`, { signal: AbortSignal.timeout(5000) }),
+    fetch(`${API_BASE}/guides?limit=3`, { signal: AbortSignal.timeout(4000) }),
+  ]);
+  if (pRes.ok) { const j = await pRes.json(); products = j.data || []; }
+  if (gRes.ok) { const j = await gRes.json(); guides = j.data || []; }
+} catch {}
+---
+
+<MainLayout
+  title={category.seoTitle || `${category.name} — SAVRIVO`}
+  description={category.seoDescription || category.description || ''}
+  canonicalUrl={`https://savrivo.in/category/${category.slug}`}
+>
+  <div class="section">
+    <div class="container-content">
+      <nav class="text-xs mb-6" style="color: var(--color-text-2)">
+        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href="/categories" class="hover:underline">Categories</a> <span class="mx-2">›</span>
+        <span style="color: var(--color-text-1)">{category.name}</span>
+      </nav>
+      <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color: var(--color-text-1)">{category.name}</h1>
+      {category.description && <p class="text-base mb-10" style="color: var(--color-text-2)">{category.description}</p>}
+      <ProductGrid products={products} emptyTitle={`No products in ${category.name} yet`} emptyDescription="Check back soon for curated picks." />
+      {guides.length > 0 && (
+        <section class="mt-16">
+          <h2 class="font-display text-xl font-bold mb-6" style="color: var(--color-text-1)">Related Buying Guides</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {guides.map(g => <GuideCard guide={g} />)}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+</MainLayout>
+

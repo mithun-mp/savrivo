@@ -1,0 +1,80 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProductCard from '../../components/product/ProductCard';
+import AffiliateDisclosure from '../../components/ui/AffiliateDisclosure';
+import type { Guide, Product } from '../../types';
+
+export async function getStaticPaths() {
+  const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+  try {
+    const res = await fetch(`${API_BASE}/guides?limit=100`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data as Guide[] || []).map(g => ({ params: { slug: g.slug }, props: { guide: g } }));
+  } catch { return []; }
+}
+
+const { guide } = Astro.props as { guide: Guide };
+---
+
+<MainLayout
+  title={guide.seoTitle || `${guide.title} | SAVRIVO Buying Guide`}
+  description={guide.seoDescription || guide.excerpt || ''}
+  canonicalUrl={`https://savrivo.in/guides/${guide.slug}`}
+  ogImage={guide.coverImage}
+  ogType="article"
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": guide.title,
+    "description": guide.excerpt,
+    "image": guide.coverImage,
+    "author": { "@type": "Organization", "name": guide.author || "Savrivo Editorial" },
+    "publisher": { "@type": "Organization", "name": "SAVRIVO", "url": "https://savrivo.in" },
+    "datePublished": guide.publishedAt,
+  }}
+>
+  <div class="section">
+    <div class="container-content">
+      <nav class="text-xs mb-6" style="color: var(--color-text-2)">
+        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href="/guides" class="hover:underline">Buying Guides</a> <span class="mx-2">›</span>
+        <span style="color: var(--color-text-1)">{guide.title}</span>
+      </nav>
+
+      <div class="max-w-3xl mx-auto">
+        {guide.category && (
+          <p class="text-xs font-semibold uppercase tracking-widest mb-4" style="color: var(--color-accent)">{guide.category}</p>
+        )}
+        <h1 class="font-display text-3xl md:text-4xl font-bold mb-4 leading-snug" style="color: var(--color-text-1)">{guide.title}</h1>
+        {guide.excerpt && <p class="text-lg mb-6 leading-relaxed" style="color: var(--color-text-2)">{guide.excerpt}</p>}
+        <div class="flex items-center gap-4 text-sm mb-8 pb-8" style="color: var(--color-text-2); border-bottom: 1px solid var(--color-border)">
+          <span>By {guide.author || 'Savrivo Editorial'}</span>
+          {guide.publishedAt && <span>{new Date(guide.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+        </div>
+
+        {guide.coverImage && (
+          <img src={guide.coverImage} alt={`Cover for ${guide.title}`} class="w-full rounded-xl mb-8 object-cover" style="max-height: 400px" loading="eager" />
+        )}
+
+        <AffiliateDisclosure />
+
+        {guide.body ? (
+          <div class="prose prose-base max-w-none mt-8" style="color: var(--color-text-1)" set:html={guide.body} />
+        ) : (
+          <p class="mt-8 text-sm" style="color: var(--color-text-2)">Guide content coming soon.</p>
+        )}
+
+        {guide.relatedProducts && guide.relatedProducts.length > 0 && (
+          <section class="mt-12">
+            <h2 class="font-display text-xl font-bold mb-6" style="color: var(--color-text-1)">Products Mentioned</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {(guide.relatedProducts as Product[]).map(p => <ProductCard product={p} />)}
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  </div>
+</MainLayout>
+

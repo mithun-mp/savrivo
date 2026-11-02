@@ -1,0 +1,167 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProductGallery from '../../components/product/ProductGallery';
+import OfferCard from '../../components/product/OfferCard';
+import ProductGrid from '../../components/product/ProductGrid';
+import Breadcrumb from '../../components/ui/Breadcrumb';
+import AffiliateDisclosure from '../../components/ui/AffiliateDisclosure';
+import type { Product, Offer, Category } from '../../types';
+
+export async function getStaticPaths() {
+  const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+  try {
+    const res = await fetch(`${API_BASE}/products?limit=100&status=published`, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return [];
+    const json = await res.json();
+    const products: Product[] = json.data || [];
+    return products.map(p => ({ params: { slug: p.slug }, props: { product: p } }));
+  } catch {
+    return [];
+  }
+}
+
+const { product } = Astro.props as { product: Product };
+const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
+
+let offers: Offer[] = [];
+let relatedProducts: Product[] = [];
+try {
+  const offersRes = await fetch(`${API_BASE}/products/${product.slug}`, { signal: AbortSignal.timeout(5000) });
+  if (offersRes.ok) {
+    // Offers would be fetched from the offers endpoint by product
+    const catId = typeof product.categoryId === 'object' ? (product.categoryId as Category)._id : product.categoryId;
+    const relRes = await fetch(`${API_BASE}/products?limit=4`, { signal: AbortSignal.timeout(4000) });
+    if (relRes.ok) { const j = await relRes.json(); relatedProducts = (j.data || []).filter((p2: Product) => p2._id !== product._id).slice(0, 4); }
+  }
+} catch {}
+
+const categoryName = typeof product.categoryId === 'object' ? (product.categoryId as Category).name : '';
+const categorySlug = typeof product.categoryId === 'object' ? (product.categoryId as Category).slug : '';
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": product.title,
+  "description": product.shortDescription || '',
+  "brand": product.brand ? { "@type": "Brand", "name": product.brand } : undefined,
+  "image": product.images?.[0]?.url,
+};
+---
+
+<MainLayout
+  title={product.seoTitle || `${product.title} | SAVRIVO`}
+  description={product.seoDescription || product.shortDescription || ''}
+  canonicalUrl={product.canonicalUrl || `https://savrivo.in/product/${product.slug}`}
+  ogImage={product.images?.[0]?.url}
+  ogType="product"
+  structuredData={structuredData}
+>
+  <div class="section">
+    <div class="container-content">
+      <!-- Breadcrumb -->
+      <div class="mb-6">
+        <Breadcrumb
+          client:load
+          items={[
+            { label: 'Home', href: '/' },
+            ...(categoryName ? [{ label: categoryName, href: `/category/${categorySlug}` }] : []),
+            { label: product.title },
+          ]}
+        />
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <!-- Gallery -->
+        <ProductGallery images={product.images || []} title={product.title} client:load />
+
+        <!-- Info -->
+        <div class="flex flex-col gap-6">
+          {categoryName && (
+            <a href={`/category/${categorySlug}`} class="inline-flex">
+              <span class="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
+                style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
+                {categoryName}
+              </span>
+            </a>
+          )}
+          <div>
+            {product.brand && (
+              <p class="text-sm font-medium uppercase tracking-widest mb-2" style="color: var(--color-text-2)">
+                {product.brand}
+              </p>
+            )}
+            <h1 class="font-display text-2xl md:text-3xl font-bold leading-snug" style="color: var(--color-text-1)">
+              {product.title}
+            </h1>
+          </div>
+
+          {product.shortDescription && (
+            <p class="text-base leading-relaxed" style="color: var(--color-text-2)">{product.shortDescription}</p>
+          )}
+
+          {product.highlights?.length > 0 && (
+            <div>
+              <h2 class="text-xs font-semibold uppercase tracking-widest mb-3" style="color: var(--color-text-2)">Key Highlights</h2>
+              <ul class="space-y-2">
+                {product.highlights.map(h => (
+                  <li class="flex items-start gap-2 text-sm" style="color: var(--color-text-1)">
+                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style="background: var(--color-accent)"></span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <!-- Offers -->
+          {offers.length > 0 ? (
+            <div class="space-y-3">
+              <h2 class="text-xs font-semibold uppercase tracking-widest" style="color: var(--color-text-2)">Available At</h2>
+              {offers.map(offer => <OfferCard offer={offer} client:load />)}
+            </div>
+          ) : (
+            <div class="p-4 rounded-xl text-sm" style="background: var(--color-overlay); border: 1px solid var(--color-border); color: var(--color-text-2)">
+              <p class="font-medium mb-1" style="color: var(--color-text-1)">Check availability at retailers</p>
+              <p>Offer details will be available soon. Check back or search this product directly on Amazon India or Flipkart.</p>
+            </div>
+          )}
+
+          <AffiliateDisclosure />
+        </div>
+      </div>
+
+      <!-- Specifications -->
+      {product.specifications?.length > 0 && (
+        <section class="mb-16">
+          <h2 class="font-display text-xl font-bold mb-5" style="color: var(--color-text-1)">Specifications</h2>
+          <div class="rounded-xl overflow-hidden" style="border: 1px solid var(--color-border)">
+            {product.specifications.map((spec, i) => (
+              <div class={`flex ${i % 2 === 0 ? '' : ''}`}
+                style={`border-bottom: ${i < product.specifications.length - 1 ? '1px solid var(--color-border)' : 'none'}; background: ${i % 2 === 0 ? 'var(--color-surface)' : 'var(--color-overlay)'}`}>
+                <div class="w-40 shrink-0 px-5 py-3 text-sm font-medium" style="color: var(--color-text-2)">{spec.key}</div>
+                <div class="flex-1 px-5 py-3 text-sm" style="color: var(--color-text-1)">{spec.value}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Full description -->
+      {product.fullDescription && (
+        <section class="mb-16 max-w-3xl">
+          <h2 class="font-display text-xl font-bold mb-5" style="color: var(--color-text-1)">About this product</h2>
+          <div class="prose prose-sm max-w-none" style="color: var(--color-text-2)" set:html={product.fullDescription} />
+        </section>
+      )}
+
+      <!-- Related products -->
+      {relatedProducts.length > 0 && (
+        <section>
+          <h2 class="font-display text-xl font-bold mb-6" style="color: var(--color-text-1)">You May Also Like</h2>
+          <ProductGrid products={relatedProducts} />
+        </section>
+      )}
+    </div>
+  </div>
+</MainLayout>
+
