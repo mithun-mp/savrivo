@@ -1,12 +1,13 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { url } from '../lib/paths';
 ---
 
 <MainLayout title="Editorial Policy — SAVRIVO" description="SAVRIVO's editorial policy. How we select and review products." canonicalUrl="https://savrivo.in/editorial-policy">
   <div class="section">
     <div class="container-content max-w-3xl">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">Editorial Policy</span>
       </nav>
       <h1 class="font-display text-3xl font-bold mb-8" style="color: var(--color-text-1)">Editorial Policy</h1>
@@ -21,7 +22,7 @@ import MainLayout from '../layouts/MainLayout.astro';
         <h2 style="color: var(--color-text-1)">Accuracy</h2>
         <p>We aim for accuracy in all product information. Where information may be outdated, we indicate when it was last verified. We do not invent specifications, ratings, or prices.</p>
         <h2 style="color: var(--color-text-1)">Corrections</h2>
-        <p>If you spot an error, please <a href="/contact" style="color: var(--color-accent)">contact us</a>. We will review and correct factual errors promptly.</p>
+        <p>If you spot an error, please <a href={url('/contact')} style="color: var(--color-accent)">contact us</a>. We will review and correct factual errors promptly.</p>
       </div>
     </div>
   </div>

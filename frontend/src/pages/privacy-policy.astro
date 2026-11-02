@@ -1,12 +1,13 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { url } from '../lib/paths';
 ---
 
 <MainLayout title="Privacy Policy — SAVRIVO" description="SAVRIVO's privacy policy. Learn how we handle your data." canonicalUrl="https://savrivo.in/privacy-policy">
   <div class="section">
     <div class="container-content max-w-3xl">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">Privacy Policy</span>
       </nav>
       <h1 class="font-display text-3xl font-bold mb-8" style="color: var(--color-text-1)">Privacy Policy</h1>

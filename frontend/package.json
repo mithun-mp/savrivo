@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "SAVRIVO — Smart Finds. Better Choices. | Affiliate product discovery platform",
   "scripts": {
-    "dev": "node -r ./patch-fs.cjs ./node_modules/astro/dist/cli/index.js dev",
-    "build": "node -r ./patch-fs.cjs ./node_modules/astro/dist/cli/index.js build",
-    "preview": "node -r ./patch-fs.cjs ./node_modules/astro/dist/cli/index.js preview",
-    "astro": "node -r ./patch-fs.cjs ./node_modules/astro/dist/cli/index.js",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

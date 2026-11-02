@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 interface Crumb { label: string; href?: string; }
 
@@ -28,7 +29,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
             {i > 0 && <ChevronRight size={14} style={{ color: 'var(--color-border)' }} aria-hidden="true" />}
             {item.href && i < items.length - 1 ? (
               <a
-                href={item.href}
+                href={url(item.href)}
                 className="text-xs hover:underline underline-offset-2"
                 style={{ color: 'var(--color-text-2)' }}
               >

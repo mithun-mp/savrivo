@@ -1,11 +1,13 @@
 ---
 import Base from './Base.astro';
+import { url } from '../lib/paths';
 
 export interface Props {
   title: string;
 }
 const { title } = Astro.props;
 const currentPath = Astro.url.pathname;
+const loginUrl = url('/admin/login');
 ---
 
 <Base title={title} noindex={true}>
@@ -13,21 +15,21 @@ const currentPath = Astro.url.pathname;
     <!-- Sidebar -->
     <aside class="hidden lg:flex flex-col w-60 shrink-0 border-r" style="background:var(--color-surface);border-color:var(--color-border)">
       <div class="p-5 border-b" style="border-color:var(--color-border)">
-        <a href="/admin" class="flex items-center gap-2 font-bold tracking-widest text-sm" style="color:var(--color-accent)">
+        <a href={url('/admin')} class="flex items-center gap-2 font-bold tracking-widest text-sm" style="color:var(--color-accent)">
           SAVRIVO <span class="text-xs font-normal opacity-60" style="color:var(--color-text-2)">Admin</span>
         </a>
       </div>
       <nav class="flex-1 p-4 space-y-1 text-sm">
-        <a href="/admin" class="admin-nav-link" data-path="/admin">Dashboard</a>
-        <a href="/admin/products" class="admin-nav-link" data-path="/admin/products">Products</a>
-        <a href="/admin/categories" class="admin-nav-link" data-path="/admin/categories">Categories</a>
-        <a href="/admin/merchants" class="admin-nav-link" data-path="/admin/merchants">Merchants</a>
-        <a href="/admin/offers" class="admin-nav-link" data-path="/admin/offers">Offers</a>
-        <a href="/admin/guides" class="admin-nav-link" data-path="/admin/guides">Buying Guides</a>
-        <a href="/admin/settings" class="admin-nav-link" data-path="/admin/settings">Settings</a>
+        <a href={url('/admin')} class="admin-nav-link" data-path="/admin">Dashboard</a>
+        <a href={url('/admin/products')} class="admin-nav-link" data-path="/admin/products">Products</a>
+        <a href={url('/admin/categories')} class="admin-nav-link" data-path="/admin/categories">Categories</a>
+        <a href={url('/admin/merchants')} class="admin-nav-link" data-path="/admin/merchants">Merchants</a>
+        <a href={url('/admin/offers')} class="admin-nav-link" data-path="/admin/offers">Offers</a>
+        <a href={url('/admin/guides')} class="admin-nav-link" data-path="/admin/guides">Buying Guides</a>
+        <a href={url('/admin/settings')} class="admin-nav-link" data-path="/admin/settings">Settings</a>
       </nav>
       <div class="p-4 border-t" style="border-color:var(--color-border)">
-        <a href="/" class="text-xs" style="color:var(--color-text-2)">← View Site</a>
+        <a href={url('/')} class="text-xs" style="color:var(--color-text-2)">← View Site</a>
       </div>
     </aside>
 
@@ -59,11 +61,11 @@ const currentPath = Astro.url.pathname;
   }
 </style>
 
-<script define:vars={{ currentPath }}>
+<script define:vars={{ currentPath, loginUrl }}>
   // Highlight active nav link
   document.querySelectorAll('.admin-nav-link').forEach(link => {
-    if (link.getAttribute('data-path') === currentPath ||
-        (currentPath.startsWith(link.getAttribute('data-path') + '/') && link.getAttribute('data-path') !== '/admin')) {
+    if (link.getAttribute('href') === currentPath ||
+        (currentPath.startsWith(link.getAttribute('href') + '/') && link.getAttribute('data-path') !== '/admin')) {
       link.classList.add('active');
     }
   });
@@ -71,7 +73,7 @@ const currentPath = Astro.url.pathname;
   try {
     const token = localStorage.getItem('savrivo-admin-token');
     const email = localStorage.getItem('savrivo-admin-email');
-    if (!token) { window.location.href = '/admin/login'; }
+    if (!token) { window.location.href = loginUrl; }
     else if (email) {
       const el = document.getElementById('admin-user-display');
       if (el) el.textContent = email;

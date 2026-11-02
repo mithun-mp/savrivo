@@ -1,6 +1,7 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
 import ProductsBrowser from '../../components/product/ProductsBrowser';
+import { url } from '../../lib/paths';
 import type { Category } from '../../types';
 
 const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
@@ -21,7 +22,7 @@ try {
     <div class="container-content">
       <div class="mb-10">
         <nav class="text-xs mb-4" style="color: var(--color-text-2)">
-          <a href="/" class="hover:underline">Home</a>
+          <a href={url('/')} class="hover:underline">Home</a>
           <span class="mx-2">›</span>
           <span style="color: var(--color-text-1)">Products</span>
         </nav>

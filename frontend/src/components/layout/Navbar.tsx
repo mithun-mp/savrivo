@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { themeStore, initTheme, toggleTheme } from '@/stores/theme';
-import { Search, Sun, Moon, Menu, X } from 'lucide-react';
+import { Search, Sun, Moon, Menu } from 'lucide-react';
+import { url } from '@/lib/paths';
 import MobileMenu from './MobileMenu';
 
 interface NavbarProps {
@@ -27,8 +28,10 @@ export default function Navbar({ currentPath }: NavbarProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    currentPath === href || (href !== '/' && currentPath.startsWith(href));
+  const isActive = (href: string) => {
+    const target = url(href);
+    return currentPath === target || (target !== url('/') && currentPath.startsWith(target));
+  };
 
   return (
     <>
@@ -44,7 +47,7 @@ export default function Navbar({ currentPath }: NavbarProps) {
         <div className="container-content flex items-center h-16 gap-6">
           {/* Logo */}
           <a
-            href="/"
+            href={url('/')}
             className="flex items-center gap-2 shrink-0 font-bold tracking-[0.2em] text-sm"
             style={{ color: 'var(--color-accent)' }}
             aria-label="SAVRIVO — Home"
@@ -68,7 +71,7 @@ export default function Navbar({ currentPath }: NavbarProps) {
             {navLinks.map(({ href, label }) => (
               <a
                 key={href}
-                href={href}
+                href={url(href)}
                 className="px-3 py-2 text-sm rounded-md transition-colors duration-150"
                 style={{
                   color: isActive(href) ? 'var(--color-accent)' : 'var(--color-text-2)',
@@ -84,7 +87,7 @@ export default function Navbar({ currentPath }: NavbarProps) {
           {/* Right actions */}
           <div className="flex items-center gap-2 ml-auto">
             <a
-              href="/search"
+              href={url('/search')}
               className="p-2 rounded-md transition-colors"
               style={{ color: 'var(--color-text-2)' }}
               aria-label="Search"

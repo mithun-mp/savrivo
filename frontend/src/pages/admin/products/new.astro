@@ -1,11 +1,12 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { url } from '../../../lib/paths';
 ---
 
 <AdminLayout title="Add Product">
   <div class="max-w-3xl space-y-8">
     <div>
-      <a href="/admin/products" class="text-xs hover:underline" style="color: var(--color-text-2)">← Back to Products</a>
+      <a href={url('/admin/products')} class="text-xs hover:underline" style="color: var(--color-text-2)">← Back to Products</a>
       <h1 class="text-xl font-bold mt-2" style="color: var(--color-text-1)">Create New Product</h1>
       <p class="text-xs" style="color: var(--color-text-2)">Fill in verified product information. No fabricated specs or ratings.</p>
     </div>
@@ -97,7 +98,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
         >
           Save Product
         </button>
-        <a href="/admin/products" class="px-5 py-3 rounded-xl border text-sm font-medium" style="border-color: var(--color-border); color: var(--color-text-2)">
+        <a href={url('/admin/products')} class="px-5 py-3 rounded-xl border text-sm font-medium" style="border-color: var(--color-border); color: var(--color-text-2)">
           Cancel
         </a>
       </div>
@@ -107,6 +108,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
 <script>
   import { api } from '../../../lib/api';
+  import { url } from '../../../lib/paths';
 
   async function init() {
     try {
@@ -154,7 +156,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
         try {
           const res = await api.admin.products.create(data);
           if (res.success) {
-            window.location.href = '/admin/products';
+            window.location.href = url('/admin/products');
           } else {
             throw new Error(res.message || 'Creation failed');
           }

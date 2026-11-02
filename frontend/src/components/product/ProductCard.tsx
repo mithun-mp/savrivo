@@ -3,6 +3,7 @@ import type { Product, Category } from '@/types';
 import { formatINR } from '@/lib/api';
 import Badge from '../ui/Badge';
 import { ExternalLink } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 interface ProductCardProps {
   product: Product;
@@ -29,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       }}
     >
       {/* Image */}
-      <a href={`/product/${product.slug}`} className="block relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
+      <a href={url(`/product/${product.slug}`)} className="block relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
         {mainImage && !imgError ? (
           <img
             src={mainImage.url}
@@ -76,7 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.brand}
           </p>
         )}
-        <a href={`/product/${product.slug}`}>
+        <a href={url(`/product/${product.slug}`)}>
           <h3
             className="font-display text-base font-semibold mb-2 line-clamp-2 leading-snug hover:underline underline-offset-2"
             style={{ color: 'var(--color-text-1)' }}
@@ -93,7 +94,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Footer */}
         <div className="mt-4 pt-4 flex items-center justify-between gap-2" style={{ borderTop: '1px solid var(--color-border)' }}>
           <a
-            href={`/product/${product.slug}`}
+            href={url(`/product/${product.slug}`)}
             className="text-sm font-semibold hover:underline underline-offset-2"
             style={{ color: 'var(--color-accent)' }}
           >

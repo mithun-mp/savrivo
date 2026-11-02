@@ -1,5 +1,6 @@
 ---
 import ThemeScript from '../components/ThemeScript.astro';
+import { url } from '../lib/paths';
 import '../styles/global.css';
 
 export interface Props {
@@ -24,6 +25,7 @@ const {
 
 const siteTitle = title.includes('SAVRIVO') ? title : `${title} | SAVRIVO`;
 const resolvedCanonical = canonicalUrl ?? Astro.url.href;
+const resolvedOgImage = ogImage.startsWith('http') ? ogImage : (Astro.site ? new URL(url(ogImage), Astro.site).href : url(ogImage));
 ---
 
 <!doctype html>
@@ -46,7 +48,7 @@ const resolvedCanonical = canonicalUrl ?? Astro.url.href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={resolvedCanonical} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={resolvedOgImage} />
     <meta property="og:site_name" content="SAVRIVO" />
     <meta property="og:locale" content="en_IN" />
 
@@ -54,10 +56,10 @@ const resolvedCanonical = canonicalUrl ?? Astro.url.href;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={siteTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={resolvedOgImage} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
 
     <!-- Font preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

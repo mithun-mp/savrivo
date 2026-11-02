@@ -4,6 +4,7 @@ import SearchBar from '../components/search/SearchBar';
 import ProductGrid from '../components/product/ProductGrid';
 import GuideCard from '../components/guide/GuideCard';
 import AffiliateDisclosure from '../components/ui/AffiliateDisclosure';
+import { url } from '../lib/paths';
 import type { Category, Product, Guide } from '../types';
 
 // Gracefully fetch data at build time — fall back to empty on error
@@ -75,14 +76,14 @@ try {
 
         <div class="flex flex-wrap gap-3">
           <a
-            href="/products"
+            href={url('/products')}
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
             style="background: var(--color-accent)"
           >
             Explore Products
           </a>
           <a
-            href="/guides"
+            href={url('/guides')}
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border transition-colors hover:opacity-80"
             style="border-color: var(--color-border); color: var(--color-text-1)"
           >
@@ -126,14 +127,14 @@ try {
             <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Browse</p>
             <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Featured Categories</h2>
           </div>
-          <a href="/categories" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/categories')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
             View all →
           </a>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           {categories.slice(0, 7).map(cat => (
             <a
-              href={`/category/${cat.slug}`}
+              href={url(`/category/${cat.slug}`)}
               class="flex flex-col items-center gap-2 p-4 rounded-xl text-center transition-all card-hover"
               style="background: var(--color-surface); border: 1px solid var(--color-border)"
             >
@@ -159,7 +160,7 @@ try {
             <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Curated</p>
             <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Editor's Picks</h2>
           </div>
-          <a href="/products?featured=true" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/products?featured=true')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
             See all →
           </a>
         </div>
@@ -177,7 +178,7 @@ try {
             <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">New</p>
             <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Trending Discoveries</h2>
           </div>
-          <a href="/products" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/products')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
             See all →
           </a>
         </div>
@@ -195,7 +196,7 @@ try {
             <p class="text-xs font-semibold uppercase tracking-widest mb-1" style="color: var(--color-accent)">Guides</p>
             <h2 class="font-display text-2xl md:text-3xl font-bold" style="color: var(--color-text-1)">Buying Guides</h2>
           </div>
-          <a href="/guides" class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+          <a href={url('/guides')} class="text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
             All guides →
           </a>
         </div>
@@ -227,7 +228,7 @@ try {
         <p class="text-base leading-relaxed mb-6" style="color: var(--color-text-2)">
           We're building a verified way to compare product offers across trusted retailers. Live offer discovery is on its way.
         </p>
-        <a href="/offers" class="inline-flex items-center gap-2 text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
+        <a href={url('/offers')} class="inline-flex items-center gap-2 text-sm font-medium hover:underline underline-offset-2" style="color: var(--color-accent)">
           Learn more about offers →
         </a>
       </div>

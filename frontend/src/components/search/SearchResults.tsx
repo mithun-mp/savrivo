@@ -4,6 +4,7 @@ import { api } from '@/lib/api';
 import { Search, Package, Grid, BookOpen, ArrowRight } from 'lucide-react';
 import EmptyState from '../ui/EmptyState';
 import { ProductCardSkeleton } from '../ui/Skeleton';
+import { url } from '@/lib/paths';
 
 interface SearchResultsProps {
   initialQuery?: string;
@@ -75,7 +76,7 @@ export default function SearchResults({ initialQuery = '' }: SearchResultsProps)
         <EmptyState
           title={`No results for "${query}"`}
           description="Try different keywords, or browse our categories."
-          action={<a href="/categories" className="text-sm font-medium underline underline-offset-2" style={{ color: 'var(--color-accent)' }}>Browse categories</a>}
+          action={<a href={url('/categories')} className="text-sm font-medium underline underline-offset-2" style={{ color: 'var(--color-accent)' }}>Browse categories</a>}
         />
       )}
 
@@ -87,7 +88,7 @@ export default function SearchResults({ initialQuery = '' }: SearchResultsProps)
           </h2>
           <div className="space-y-2">
             {results.products.map((p: Product) => (
-              <a key={p._id} href={`/product/${p.slug}`}
+              <a key={p._id} href={url(`/product/${p.slug}`)}
                 className="flex items-center gap-4 p-3 rounded-lg transition-colors hover:opacity-80"
                 style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
               >
@@ -113,7 +114,7 @@ export default function SearchResults({ initialQuery = '' }: SearchResultsProps)
           </h2>
           <div className="flex flex-wrap gap-2">
             {results.categories.map((c: Category) => (
-              <a key={c._id} href={`/category/${c.slug}`}
+              <a key={c._id} href={url(`/category/${c.slug}`)}
                 className="text-sm px-4 py-2 rounded-full border transition-colors hover:opacity-80"
                 style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text-1)' }}
               >
@@ -132,7 +133,7 @@ export default function SearchResults({ initialQuery = '' }: SearchResultsProps)
           </h2>
           <div className="space-y-2">
             {results.guides.map((g: Guide) => (
-              <a key={g._id} href={`/guides/${g.slug}`}
+              <a key={g._id} href={url(`/guides/${g.slug}`)}
                 className="flex items-center gap-3 p-3 rounded-lg transition-colors hover:opacity-80"
                 style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
               >

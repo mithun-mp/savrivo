@@ -1,5 +1,6 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { url } from '../lib/paths';
 ---
 
 <MainLayout
@@ -10,7 +11,7 @@ import MainLayout from '../layouts/MainLayout.astro';
   <div class="section">
     <div class="container-content max-w-2xl">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">Contact</span>
       </nav>
 

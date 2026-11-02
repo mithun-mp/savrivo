@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import ProductCard from '../../components/product/ProductCard';
 import AffiliateDisclosure from '../../components/ui/AffiliateDisclosure';
+import { url } from '../../lib/paths';
 import type { Guide, Product } from '../../types';
 
 export async function getStaticPaths() {
@@ -37,8 +38,8 @@ const { guide } = Astro.props as { guide: Guide };
   <div class="section">
     <div class="container-content">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
-        <a href="/guides" class="hover:underline">Buying Guides</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/guides')} class="hover:underline">Buying Guides</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">{guide.title}</span>
       </nav>
 

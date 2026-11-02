@@ -2,6 +2,7 @@ import React from 'react';
 import type { Guide } from '@/types';
 import { formatDate } from '@/lib/api';
 import { BookOpen } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 interface GuideCardProps {
   guide: Guide;
@@ -14,7 +15,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
       style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}
     >
       {/* Cover */}
-      <a href={`/guides/${guide.slug}`} className="block overflow-hidden" style={{ aspectRatio: '16/9', background: 'var(--color-overlay)' }}>
+      <a href={url(`/guides/${guide.slug}`)} className="block overflow-hidden" style={{ aspectRatio: '16/9', background: 'var(--color-overlay)' }}>
         {guide.coverImage ? (
           <img
             src={guide.coverImage}
@@ -37,7 +38,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
             {guide.category}
           </p>
         )}
-        <a href={`/guides/${guide.slug}`}>
+        <a href={url(`/guides/${guide.slug}`)}>
           <h3 className="font-display text-base font-semibold mb-2 line-clamp-2 leading-snug hover:underline underline-offset-2" style={{ color: 'var(--color-text-1)' }}>
             {guide.title}
           </h3>

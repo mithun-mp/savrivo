@@ -5,6 +5,7 @@ import OfferCard from '../../components/product/OfferCard';
 import ProductGrid from '../../components/product/ProductGrid';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import AffiliateDisclosure from '../../components/ui/AffiliateDisclosure';
+import { url } from '../../lib/paths';
 import type { Product, Offer, Category } from '../../types';
 
 export async function getStaticPaths() {
@@ -77,7 +78,7 @@ const structuredData = {
         <!-- Info -->
         <div class="flex flex-col gap-6">
           {categoryName && (
-            <a href={`/category/${categorySlug}`} class="inline-flex">
+            <a href={url(`/category/${categorySlug}`)} class="inline-flex">
               <span class="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
                 style="background: rgba(28,69,50,0.08); color: var(--color-accent)">
                 {categoryName}

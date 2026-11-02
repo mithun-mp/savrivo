@@ -1,4 +1,5 @@
 import React from 'react';
+import { url } from '@/lib/paths';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -48,8 +49,9 @@ export default function Button({
   const cls = `${styles.base} ${styles.variant[variant]} ${styles.size[size]} ${className}`;
 
   if (href) {
+    const resolvedHref = href.startsWith('/') ? url(href) : href;
     return (
-      <a href={href} className={cls} style={variantStyle}>
+      <a href={resolvedHref} className={cls} style={variantStyle}>
         {leftIcon}
         {children}
         {rightIcon}

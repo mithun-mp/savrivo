@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Category } from '@/types';
 import { ArrowRight } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 // Map icon names (stored as strings) to SVG elements
 const iconMap: Record<string, React.ReactNode> = {
@@ -29,7 +30,7 @@ interface CategoryCardProps {
 export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <a
-      href={`/category/${category.slug}`}
+      href={url(`/category/${category.slug}`)}
       className="group flex flex-col gap-3 p-5 rounded-xl transition-all duration-200 card-hover"
       style={{
         background: 'var(--color-surface)',

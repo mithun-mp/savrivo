@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 interface SearchBarProps {
   defaultValue?: string;
@@ -30,7 +31,7 @@ export default function SearchBar({
     if (onSearch) {
       onSearch(q);
     } else {
-      window.location.href = `/search?q=${encodeURIComponent(q)}`;
+      window.location.href = url(`/search?q=${encodeURIComponent(q)}`);
     }
   };
 

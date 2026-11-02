@@ -1,12 +1,13 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { url } from '../lib/paths';
 ---
 
 <MainLayout title="Affiliate Disclosure — SAVRIVO" description="SAVRIVO's full affiliate disclosure. We earn commissions through affiliate programmes." canonicalUrl="https://savrivo.in/affiliate-disclosure">
   <div class="section">
     <div class="container-content max-w-3xl">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">Affiliate Disclosure</span>
       </nav>
       <h1 class="font-display text-3xl font-bold mb-8" style="color: var(--color-text-1)">Affiliate Disclosure</h1>
@@ -29,7 +30,7 @@ import MainLayout from '../layouts/MainLayout.astro';
         <p>Our affiliate relationships do not influence our editorial recommendations. Products are selected based on relevance and usefulness, not commission rates. We do not accept paid placements in editorial content.</p>
 
         <h2 style="color: var(--color-text-1)">Questions</h2>
-        <p>If you have questions about our affiliate relationships, please <a href="/contact" style="color: var(--color-accent)">contact us</a>.</p>
+        <p>If you have questions about our affiliate relationships, please <a href={url('/contact')} style="color: var(--color-accent)">contact us</a>.</p>
       </div>
     </div>
   </div>

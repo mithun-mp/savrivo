@@ -1,6 +1,7 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
 import GuideCard from '../../components/guide/GuideCard';
+import { url } from '../../lib/paths';
 import type { Guide } from '../../types';
 
 const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000/api';
@@ -15,7 +16,7 @@ try {
   <div class="section">
     <div class="container-content">
       <nav class="text-xs mb-4" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">Buying Guides</span>
       </nav>
       <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color: var(--color-text-1)">Buying Guides</h1>

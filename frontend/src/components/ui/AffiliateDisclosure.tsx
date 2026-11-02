@@ -1,5 +1,6 @@
 import React from 'react';
 import { Info } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 export default function AffiliateDisclosure({ compact = false }: { compact?: boolean }) {
   if (compact) {
@@ -7,7 +8,7 @@ export default function AffiliateDisclosure({ compact = false }: { compact?: boo
       <p className="text-xs" style={{ color: 'var(--color-text-2)' }}>
         <Info size={11} className="inline mr-1 opacity-60" aria-hidden="true" />
         Affiliate links. We may earn a commission.{' '}
-        <a href="/affiliate-disclosure" className="underline underline-offset-2">Learn more</a>
+        <a href={url('/affiliate-disclosure')} className="underline underline-offset-2">Learn more</a>
       </p>
     );
   }
@@ -21,7 +22,7 @@ export default function AffiliateDisclosure({ compact = false }: { compact?: boo
       <p>
         <strong style={{ color: 'var(--color-text-1)' }}>Affiliate disclosure:</strong>{' '}
         SAVRIVO participates in affiliate programmes. When you click "Shop Now" and make a qualifying purchase, we may earn a small commission at no extra cost to you. This does not influence our editorial recommendations.{' '}
-        <a href="/affiliate-disclosure" className="underline underline-offset-2">
+        <a href={url('/affiliate-disclosure')} className="underline underline-offset-2">
           Read our full disclosure
         </a>
         .

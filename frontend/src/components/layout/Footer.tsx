@@ -1,4 +1,5 @@
 import React from 'react';
+import { url } from '@/lib/paths';
 
 const footerLinks = {
   discover: [
@@ -32,7 +33,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-1">
             <a
-              href="/"
+              href={url('/')}
               className="inline-flex items-center gap-2 font-bold tracking-[0.2em] text-sm mb-4"
               style={{ color: 'var(--color-accent)' }}
             >
@@ -60,7 +61,7 @@ export default function Footer() {
               {footerLinks.discover.map(({ href, label }) => (
                 <li key={href}>
                   <a
-                    href={href}
+                    href={url(href)}
                     className="text-sm transition-colors hover:underline underline-offset-2"
                     style={{ color: 'var(--color-text-2)' }}
                   >
@@ -80,7 +81,7 @@ export default function Footer() {
               {footerLinks.company.map(({ href, label }) => (
                 <li key={href}>
                   <a
-                    href={href}
+                    href={url(href)}
                     className="text-sm transition-colors hover:underline underline-offset-2"
                     style={{ color: 'var(--color-text-2)' }}
                   >
@@ -100,7 +101,7 @@ export default function Footer() {
               {footerLinks.legal.map(({ href, label }) => (
                 <li key={href}>
                   <a
-                    href={href}
+                    href={url(href)}
                     className="text-sm transition-colors hover:underline underline-offset-2"
                     style={{ color: 'var(--color-text-2)' }}
                   >
@@ -122,7 +123,7 @@ export default function Footer() {
           </p>
           <p className="text-xs text-center" style={{ color: 'var(--color-text-2)' }}>
             SAVRIVO earns commissions from qualifying purchases via affiliate links.{' '}
-            <a href="/affiliate-disclosure" className="underline underline-offset-2">
+            <a href={url('/affiliate-disclosure')} className="underline underline-offset-2">
               Learn more
             </a>
           </p>

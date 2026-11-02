@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { url } from '@/lib/paths';
 
 interface MobileMenuProps {
   open: boolean;
@@ -29,8 +30,10 @@ export default function MobileMenu({ open, onClose, currentPath, navLinks }: Mob
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  const isActive = (href: string) =>
-    currentPath === href || (href !== '/' && currentPath.startsWith(href));
+  const isActive = (href: string) => {
+    const target = url(href);
+    return currentPath === target || (target !== url('/') && currentPath.startsWith(target));
+  };
 
   if (!open) return null;
 
@@ -53,7 +56,7 @@ export default function MobileMenu({ open, onClose, currentPath, navLinks }: Mob
           style={{ borderColor: 'var(--color-border)' }}
         >
           <a
-            href="/"
+            href={url('/')}
             className="font-bold tracking-[0.2em] text-sm"
             style={{ color: 'var(--color-accent)' }}
             onClick={onClose}
@@ -75,7 +78,7 @@ export default function MobileMenu({ open, onClose, currentPath, navLinks }: Mob
           {[{ href: '/', label: 'Home' }, ...navLinks].map(({ href, label }) => (
             <a
               key={href}
-              href={href}
+              href={url(href)}
               onClick={onClose}
               className="block px-4 py-3 rounded-lg text-sm font-medium transition-colors"
               style={{

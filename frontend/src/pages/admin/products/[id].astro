@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { url } from '../../../lib/paths';
 
 export async function getStaticPaths() {
   return [{ params: { id: 'edit' } }];
@@ -9,7 +10,7 @@ export async function getStaticPaths() {
 <AdminLayout title="Edit Product">
   <div class="max-w-3xl space-y-8">
     <div>
-      <a href="/admin/products" class="text-xs hover:underline" style="color: var(--color-text-2)">← Back to Products</a>
+      <a href={url('/admin/products')} class="text-xs hover:underline" style="color: var(--color-text-2)">← Back to Products</a>
       <h1 class="text-xl font-bold mt-2" style="color: var(--color-text-1)">Edit Product</h1>
     </div>
 
@@ -64,7 +65,7 @@ export async function getStaticPaths() {
         >
           Update Product
         </button>
-        <a href="/admin/products" class="px-5 py-3 rounded-xl border text-sm font-medium" style="border-color: var(--color-border); color: var(--color-text-2)">
+        <a href={url('/admin/products')} class="px-5 py-3 rounded-xl border text-sm font-medium" style="border-color: var(--color-border); color: var(--color-text-2)">
           Back
         </a>
       </div>

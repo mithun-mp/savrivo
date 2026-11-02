@@ -1,12 +1,13 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { url } from '../lib/paths';
 ---
 
 <MainLayout title="About SAVRIVO — Smart Finds. Better Choices." description="Learn what SAVRIVO is, how product discovery works, and how we earn through affiliate commissions." canonicalUrl="https://savrivo.in/about">
   <div class="section">
     <div class="container-content max-w-3xl">
       <nav class="text-xs mb-6" style="color: var(--color-text-2)">
-        <a href="/" class="hover:underline">Home</a> <span class="mx-2">›</span>
+        <a href={url('/')} class="hover:underline">Home</a> <span class="mx-2">›</span>
         <span style="color: var(--color-text-1)">About</span>
       </nav>
       <h1 class="font-display text-3xl md:text-4xl font-bold mb-6" style="color: var(--color-text-1)">About SAVRIVO</h1>
@@ -35,12 +36,12 @@ import MainLayout from '../layouts/MainLayout.astro';
         <section>
           <h2 style="color: var(--color-text-1)">How We Earn Revenue</h2>
           <p>SAVRIVO participates in affiliate programmes such as Amazon Associates. When you click a link and make a qualifying purchase, we may earn a small commission at no extra cost to you. This commission supports our editorial work and keeps the platform free to use.</p>
-          <p>Our editorial recommendations are not influenced by affiliate relationships. Read our <a href="/affiliate-disclosure" style="color: var(--color-accent)">full affiliate disclosure</a> and <a href="/editorial-policy" style="color: var(--color-accent)">editorial policy</a>.</p>
+          <p>Our editorial recommendations are not influenced by affiliate relationships. Read our <a href={url('/affiliate-disclosure')} style="color: var(--color-accent)">full affiliate disclosure</a> and <a href={url('/editorial-policy')} style="color: var(--color-accent)">editorial policy</a>.</p>
         </section>
 
         <section>
           <h2 style="color: var(--color-text-1)">Contact Us</h2>
-          <p>Have feedback, a question, or want to suggest a product category? <a href="/contact" style="color: var(--color-accent)">Get in touch</a>.</p>
+          <p>Have feedback, a question, or want to suggest a product category? <a href={url('/contact')} style="color: var(--color-accent)">Get in touch</a>.</p>
         </section>
       </div>
     </div>
