@@ -17,7 +17,13 @@ export function createApp() {
   // Multi-origin CORS support for both savrivo and savrivoapp
   const configuredOrigins = (config.frontendOrigin || '')
     .split(',')
-    .map((o) => o.trim().replace(/\/$/, ''))
+    .map((o) => {
+      try {
+        return new URL(o.trim()).origin;
+      } catch {
+        return o.trim().replace(/\/+$/, '');
+      }
+    })
     .filter(Boolean);
 
   const allowedOriginsSet = new Set([

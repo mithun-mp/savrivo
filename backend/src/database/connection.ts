@@ -1,27 +1,114 @@
 import mongoose from 'mongoose';
 import { config } from '../config/env';
 
+/**
+ * Strips password and sensitive credentials from MongoDB URI for safe logging.
+ */
+export function sanitizeMongoUri(uri: string): string {
+  if (!uri) return '[NOT_SET]';
+  return uri.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@');
+}
+
+let eventListenersAttached = false;
+
+function attachLifecycleEventListeners(): void {
+  if (eventListenersAttached) return;
+  eventListenersAttached = true;
+
+  mongoose.connection.on('connected', () => {
+    console.log('[DB] MongoDB Atlas connection established');
+  });
+
+  mongoose.connection.on('disconnected', () => {
+    console.warn('[DB] MongoDB Atlas disconnected. Driver will attempt automatic reconnection.');
+  });
+
+  mongoose.connection.on('reconnected', () => {
+    console.log('[DB] MongoDB Atlas reconnected successfully');
+  });
+
+  mongoose.connection.on('error', (err: unknown) => {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[DB] MongoDB Atlas connection error:', message);
+  });
+}
+
+/**
+ * Connects to MongoDB Atlas using Mongoose.
+ * Avoids opening redundant connections and fails safely if URI is missing in production.
+ */
 export async function connectDatabase(): Promise<void> {
-  if (!config.mongoUri) {
-    console.warn('[DB] MONGODB_URI not set. Database connection skipped.');
+  // If already connected, reuse connection
+  if (mongoose.connection.readyState === 1) {
     return;
   }
+
+  // If connection is in progress, wait for it
+  if (mongoose.connection.readyState === 2) {
+    await new Promise<void>((resolve, reject) => {
+      mongoose.connection.once('connected', () => resolve());
+      mongoose.connection.once('error', (err) => reject(err));
+    });
+    return;
+  }
+
+  if (!config.mongoUri) {
+    if (config.isProd) {
+      throw new Error(
+        '[DB] FATAL: MONGODB_URI environment variable is missing in production. ' +
+        'Cannot start SAVRIVO backend without a valid MongoDB Atlas connection.'
+      );
+    }
+    console.warn(
+      '[DB] WARNING: MONGODB_URI is not set. Database features will be unavailable in development.'
+    );
+    return;
+  }
+
+  attachLifecycleEventListeners();
+
   try {
     mongoose.set('strictQuery', false);
-    await mongoose.connect(config.mongoUri);
-    console.log('[DB] Connected to MongoDB Atlas');
-  } catch (err) {
-    console.error('[DB] Connection failed:', err);
+
+    console.log(`[DB] Connecting to MongoDB Atlas: ${sanitizeMongoUri(config.mongoUri)}...`);
+
+    await mongoose.connect(config.mongoUri, {
+      serverSelectionTimeoutMS: 10000,
+      dbName: 'savrivo',
+    });
+
+    console.log('[DB] Successfully connected to MongoDB Atlas database: savrivo');
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[DB] Failed to connect to MongoDB Atlas:', message);
     throw err;
   }
 }
 
-export function getDbStatus(): string {
-  const states: Record<number, string> = {
+/**
+ * Gracefully closes the MongoDB connection.
+ */
+export async function disconnectDatabase(): Promise<void> {
+  if (mongoose.connection.readyState !== 0) {
+    try {
+      await mongoose.disconnect();
+      console.log('[DB] MongoDB connection closed gracefully');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('[DB] Error during MongoDB disconnect:', message);
+    }
+  }
+}
+
+/**
+ * Returns human-readable database connection status.
+ */
+export function getDbStatus(): 'connected' | 'connecting' | 'disconnected' | 'disconnecting' {
+  const states: Record<number, 'disconnected' | 'connected' | 'connecting' | 'disconnecting'> = {
     0: 'disconnected',
     1: 'connected',
     2: 'connecting',
     3: 'disconnecting',
   };
-  return states[mongoose.connection.readyState] ?? 'unknown';
+  return states[mongoose.connection.readyState] ?? 'disconnected';
 }

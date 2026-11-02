@@ -48,6 +48,12 @@ export function errorHandler(
       return;
     }
 
+    // CORS block
+    if (err.message && err.message.includes('not allowed by CORS')) {
+      sendError(res, 'Cross-Origin Request Blocked by CORS', 403, 'CORS_ERROR');
+      return;
+    }
+
     sendError(res, config.isDev ? err.message : 'An unexpected error occurred');
     return;
   }
