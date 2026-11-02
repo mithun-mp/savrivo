@@ -4,12 +4,12 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
 <AdminLayout title="Offer Management">
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Product Offers</h1>
         <p class="text-xs" style="color: var(--color-text-2)">Manage affiliate links and external retailer destinations for products.</p>
       </div>
-      <button id="add-offer-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+      <button id="add-offer-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px] flex items-center justify-center self-start sm:self-auto" style="background: var(--color-accent)">
         + Add Offer
       </button>
     </div>
@@ -20,33 +20,33 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Product *</label>
-          <select id="o-product" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+          <select id="o-product" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
             <option value="">Select Product</option>
           </select>
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Merchant *</label>
-          <select id="o-merchant" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+          <select id="o-merchant" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
             <option value="">Select Merchant</option>
           </select>
         </div>
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Destination Product URL *</label>
-        <input type="url" id="o-url" placeholder="https://www.amazon.in/dp/..." class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        <input type="url" id="o-url" placeholder="https://www.amazon.in/dp/..." class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Affiliate Tracking URL *</label>
-        <input type="url" id="o-aff-url" placeholder="https://www.amazon.in/dp/...?tag=..." class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        <input type="url" id="o-aff-url" placeholder="https://www.amazon.in/dp/...?tag=..." class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Current Indicative Price (₹)</label>
-          <input type="number" id="o-price" placeholder="e.g. 19999" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="number" id="o-price" placeholder="e.g. 19999" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Availability</label>
-          <select id="o-avail" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+          <select id="o-avail" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
             <option value="unknown">Check at Retailer</option>
             <option value="in_stock">In Stock</option>
             <option value="out_of_stock">Out of Stock</option>
@@ -54,27 +54,29 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
         </div>
       </div>
       <div class="flex gap-2">
-        <button id="o-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save Offer</button>
-        <button id="o-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+        <button id="o-save-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white min-h-[44px]" style="background: var(--color-accent)">Save Offer</button>
+        <button id="o-cancel-btn" class="px-5 py-2.5 rounded-lg border text-sm min-h-[44px]" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
-      <table class="w-full text-left text-sm">
-        <thead>
-          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
-            <th class="p-4">Product</th>
-            <th class="p-4">Merchant</th>
-            <th class="p-4">Price</th>
-            <th class="p-4">Status</th>
-            <th class="p-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="offers-tbody">
-          <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading offers...</td></tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm min-w-[620px]">
+          <thead>
+            <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+              <th class="p-4">Product</th>
+              <th class="p-4">Merchant</th>
+              <th class="p-4">Price</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="offers-tbody">
+            <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading offers...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </AdminLayout>

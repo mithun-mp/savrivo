@@ -4,12 +4,12 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
 <AdminLayout title="Merchant Management">
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Merchants & Retailers</h1>
         <p class="text-xs" style="color: var(--color-text-2)">Configure approved external merchants (Amazon India, Flipkart, etc.).</p>
       </div>
-      <button id="add-merchant-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+      <button id="add-merchant-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px] flex items-center justify-center self-start sm:self-auto" style="background: var(--color-accent)">
         + Add Merchant
       </button>
     </div>
@@ -20,39 +20,41 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Merchant Name *</label>
-          <input type="text" id="m-name" placeholder="e.g. Amazon India" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="text" id="m-name" placeholder="e.g. Amazon India" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Website URL *</label>
-          <input type="url" id="m-url" placeholder="https://www.amazon.in" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="url" id="m-url" placeholder="https://www.amazon.in" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Affiliate Programme Name</label>
-        <input type="text" id="m-program" placeholder="e.g. Amazon Associates" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        <input type="text" id="m-program" placeholder="e.g. Amazon Associates" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
       </div>
       <div class="flex gap-2">
-        <button id="m-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save Merchant</button>
-        <button id="m-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+        <button id="m-save-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white min-h-[44px]" style="background: var(--color-accent)">Save Merchant</button>
+        <button id="m-cancel-btn" class="px-5 py-2.5 rounded-lg border text-sm min-h-[44px]" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
-      <table class="w-full text-left text-sm">
-        <thead>
-          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
-            <th class="p-4">Merchant</th>
-            <th class="p-4">Official Website</th>
-            <th class="p-4">Programme</th>
-            <th class="p-4">Status</th>
-            <th class="p-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="merchants-tbody">
-          <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading merchants...</td></tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm min-w-[620px]">
+          <thead>
+            <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+              <th class="p-4">Merchant</th>
+              <th class="p-4">Official Website</th>
+              <th class="p-4">Programme</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="merchants-tbody">
+            <tr><td colspan="5" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading merchants...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </AdminLayout>
@@ -74,7 +76,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
         <tr class="border-b" style="border-color: var(--color-border)">
           <td class="p-4 font-semibold" style="color: var(--color-text-1)">${m.name}</td>
           <td class="p-4 text-xs">
-            <a href="${m.websiteUrl}" target="_blank" class="hover:underline" style="color: var(--color-accent)">${m.websiteUrl} ↗</a>
+            <a href="${m.websiteUrl}" target="_blank" class="hover:underline break-all" style="color: var(--color-accent)">${m.websiteUrl} ↗</a>
           </td>
           <td class="p-4 text-xs" style="color: var(--color-text-2)">${m.affiliateProgramName || '—'}</td>
           <td class="p-4 text-xs">

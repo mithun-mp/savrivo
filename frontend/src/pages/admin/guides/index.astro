@@ -4,12 +4,12 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
 <AdminLayout title="Buying Guide Management">
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Buying Guides</h1>
         <p class="text-xs" style="color: var(--color-text-2)">Create original, research-backed purchase guides.</p>
       </div>
-      <button id="add-guide-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+      <button id="add-guide-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px] flex items-center justify-center self-start sm:self-auto" style="background: var(--color-accent)">
         + New Guide
       </button>
     </div>
@@ -19,16 +19,16 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <h2 class="text-sm font-semibold" style="color: var(--color-text-1)">Write New Buying Guide</h2>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Title *</label>
-        <input type="text" id="g-title" placeholder="e.g. How to Choose Wireless Earbuds in India (2025)" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+        <input type="text" id="g-title" placeholder="e.g. How to Choose Wireless Earbuds in India (2025)" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Category</label>
-          <input type="text" id="g-category" placeholder="e.g. Electronics" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="text" id="g-category" placeholder="e.g. Electronics" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Status</label>
-          <select id="g-status" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+          <select id="g-status" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
             <option value="draft">Draft</option>
             <option value="published">Published</option>
           </select>
@@ -36,39 +36,42 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Excerpt</label>
-        <textarea id="g-excerpt" rows="2" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
+        <textarea id="g-excerpt" rows="2" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Body Content (HTML)</label>
-        <textarea id="g-body" rows="6" class="w-full px-4 py-2 rounded-lg border text-sm outline-none font-mono text-xs" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
+        <textarea id="g-body" rows="6" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none font-mono text-xs" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
       </div>
       <div class="flex gap-2">
-        <button id="g-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save Guide</button>
-        <button id="g-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+        <button id="g-save-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white min-h-[44px]" style="background: var(--color-accent)">Save Guide</button>
+        <button id="g-cancel-btn" class="px-5 py-2.5 rounded-lg border text-sm min-h-[44px]" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
-      <table class="w-full text-left text-sm">
-        <thead>
-          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
-            <th class="p-4">Title</th>
-            <th class="p-4">Category</th>
-            <th class="p-4">Status</th>
-            <th class="p-4">Published</th>
-          </tr>
-        </thead>
-        <tbody id="guides-tbody">
-          <tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading guides...</td></tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm min-w-[560px]">
+          <thead>
+            <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+              <th class="p-4">Title</th>
+              <th class="p-4">Category</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Published</th>
+            </tr>
+          </thead>
+          <tbody id="guides-tbody">
+            <tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading guides...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </AdminLayout>
 
 <script>
   import { api } from '../../../lib/api';
+  import { url } from '../../../lib/paths';
 
   async function load() {
     const tbody = document.getElementById('guides-tbody');
@@ -83,7 +86,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       tbody.innerHTML = list.map((g: any) => `
         <tr class="border-b" style="border-color: var(--color-border)">
           <td class="p-4 font-medium" style="color: var(--color-text-1)">
-            <a href="/guides/${g.slug}" target="_blank" class="hover:underline flex items-center gap-1.5">
+            <a href="${url('/guides/' + g.slug)}" target="_blank" class="hover:underline flex items-center gap-1.5">
               ${g.title} ↗
             </a>
           </td>

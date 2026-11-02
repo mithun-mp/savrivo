@@ -6,59 +6,59 @@ import { url } from '../../lib/paths';
 <AdminLayout title="Dashboard">
   <div class="space-y-8">
     <!-- Stat cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4" id="stats-grid">
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3.5 sm:gap-4" id="stats-grid">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Total Products</p>
         <p class="text-2xl font-bold mt-2" id="stat-total" style="color: var(--color-text-1)">—</p>
       </div>
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Published</p>
         <p class="text-2xl font-bold mt-2 text-emerald-600" id="stat-published">—</p>
       </div>
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Drafts</p>
         <p class="text-2xl font-bold mt-2 text-amber-600" id="stat-drafts">—</p>
       </div>
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Categories</p>
         <p class="text-2xl font-bold mt-2" id="stat-categories" style="color: var(--color-text-1)">—</p>
       </div>
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Active Merchants</p>
         <p class="text-2xl font-bold mt-2" id="stat-merchants" style="color: var(--color-accent)">—</p>
       </div>
-      <div class="p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
+      <div class="p-4 sm:p-5 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
         <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--color-text-2)">Expired Offers</p>
         <p class="text-2xl font-bold mt-2 text-red-500" id="stat-expired">—</p>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-wrap gap-2.5 sm:gap-3">
       <a
         href={url('/admin/products/new')}
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px]"
         style="background: var(--color-accent)"
       >
         + Add New Product
       </a>
       <a
         href={url('/admin/categories')}
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80 min-h-[44px]"
         style="border-color: var(--color-border); color: var(--color-text-1)"
       >
         Manage Categories
       </a>
       <a
         href={url('/admin/merchants')}
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80 min-h-[44px]"
         style="border-color: var(--color-border); color: var(--color-text-1)"
       >
         Manage Merchants
       </a>
       <a
         href={url('/admin/offers')}
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors hover:opacity-80 min-h-[44px]"
         style="border-color: var(--color-border); color: var(--color-text-1)"
       >
         Manage Offers
@@ -72,7 +72,7 @@ import { url } from '../../lib/paths';
         <a href={url('/admin/products')} class="text-xs font-medium hover:underline" style="color: var(--color-accent)">View All →</a>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-sm min-w-[540px]">
           <thead>
             <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
               <th class="p-4">Title</th>

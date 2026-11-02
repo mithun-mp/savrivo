@@ -4,12 +4,12 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
 <AdminLayout title="Category Management">
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Categories</h1>
         <p class="text-xs" style="color: var(--color-text-2)">Create and organize product categories.</p>
       </div>
-      <button id="add-cat-btn" class="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90" style="background: var(--color-accent)">
+      <button id="add-cat-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px] flex items-center justify-center self-start sm:self-auto" style="background: var(--color-accent)">
         + Add Category
       </button>
     </div>
@@ -20,38 +20,40 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Name *</label>
-          <input type="text" id="cat-name" placeholder="e.g. Home & Kitchen" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="text" id="cat-name" placeholder="e.g. Home & Kitchen" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Icon Name (Lucide)</label>
-          <input type="text" id="cat-icon" placeholder="e.g. Home, Cpu, Sparkles" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
+          <input type="text" id="cat-icon" placeholder="e.g. Home, Cpu, Sparkles" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)" />
         </div>
       </div>
       <div>
         <label class="block text-xs font-semibold mb-1" style="color: var(--color-text-1)">Description</label>
-        <textarea id="cat-desc" rows="2" class="w-full px-4 py-2 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
+        <textarea id="cat-desc" rows="2" class="w-full px-4 py-2.5 rounded-lg border text-sm outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)"></textarea>
       </div>
       <div class="flex gap-2">
-        <button id="cat-save-btn" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background: var(--color-accent)">Save</button>
-        <button id="cat-cancel-btn" class="px-4 py-2 rounded-lg border text-sm" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
+        <button id="cat-save-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white min-h-[44px]" style="background: var(--color-accent)">Save</button>
+        <button id="cat-cancel-btn" class="px-5 py-2.5 rounded-lg border text-sm min-h-[44px]" style="border-color: var(--color-border); color: var(--color-text-2)">Cancel</button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
-      <table class="w-full text-left text-sm">
-        <thead>
-          <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
-            <th class="p-4">Name</th>
-            <th class="p-4">Slug</th>
-            <th class="p-4">Description</th>
-            <th class="p-4">Active</th>
-          </tr>
-        </thead>
-        <tbody id="cat-tbody">
-          <tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading categories...</td></tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm min-w-[560px]">
+          <thead>
+            <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
+              <th class="p-4">Name</th>
+              <th class="p-4">Slug</th>
+              <th class="p-4">Description</th>
+              <th class="p-4">Active</th>
+            </tr>
+          </thead>
+          <tbody id="cat-tbody">
+            <tr><td colspan="4" class="p-4 text-center text-xs" style="color: var(--color-text-2)">Loading categories...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </AdminLayout>

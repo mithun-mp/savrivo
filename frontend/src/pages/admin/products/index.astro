@@ -5,14 +5,14 @@ import { url } from '../../../lib/paths';
 
 <AdminLayout title="Product Management">
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-xl font-bold" style="color: var(--color-text-1)">Products</h1>
         <p class="text-xs" style="color: var(--color-text-2)">Create, review, publish, and manage affiliate products.</p>
       </div>
       <a
         href={url('/admin/products/new')}
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90 min-h-[44px] self-start sm:self-auto"
         style="background: var(--color-accent)"
       >
         + Create Product
@@ -21,13 +21,13 @@ import { url } from '../../../lib/paths';
 
     <!-- Filter bar -->
     <div class="flex flex-wrap items-center gap-3 p-4 rounded-xl border" style="background: var(--color-surface); border-color: var(--color-border)">
-      <select id="filter-status" class="text-sm px-3 py-2 rounded-lg border outline-none" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
+      <select id="filter-status" class="text-sm px-3.5 py-2.5 rounded-lg border outline-none min-h-[44px]" style="background: var(--color-bg); border-color: var(--color-border); color: var(--color-text-1)">
         <option value="">All Statuses</option>
         <option value="published">Published</option>
         <option value="draft">Draft</option>
         <option value="archived">Archived</option>
       </select>
-      <button id="refresh-btn" class="text-sm px-4 py-2 rounded-lg border ml-auto" style="border-color: var(--color-border); color: var(--color-text-1)">
+      <button id="refresh-btn" class="text-sm px-4 py-2.5 rounded-lg border ml-auto min-h-[44px] font-medium" style="border-color: var(--color-border); color: var(--color-text-1)">
         Refresh
       </button>
     </div>
@@ -35,7 +35,7 @@ import { url } from '../../../lib/paths';
     <!-- Products Table -->
     <div class="rounded-xl border overflow-hidden" style="background: var(--color-surface); border-color: var(--color-border)">
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
+        <table class="w-full text-left text-sm min-w-[640px]">
           <thead>
             <tr class="border-b text-xs uppercase tracking-wider" style="border-color: var(--color-border); color: var(--color-text-2)">
               <th class="p-4">Title</th>

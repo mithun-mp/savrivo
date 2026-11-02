@@ -21,7 +21,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
     pages.push(totalPages);
   }
 
-  const btnBase = 'w-9 h-9 flex items-center justify-center rounded-md text-sm font-medium transition-colors';
+  const btnBase = 'w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-sm font-medium transition-colors';
 
   return (
     <nav className="flex items-center gap-1" aria-label="Pagination">
