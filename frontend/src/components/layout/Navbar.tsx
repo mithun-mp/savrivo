@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { themeStore, initTheme, toggleTheme } from '@/stores/theme';
 import { Search, Sun, Moon, Menu, X } from 'lucide-react';
