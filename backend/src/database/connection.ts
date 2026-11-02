@@ -67,18 +67,39 @@ export async function connectDatabase(): Promise<void> {
 
   attachLifecycleEventListeners();
 
+  const connectOptions: mongoose.ConnectOptions = {
+    serverSelectionTimeoutMS: 10000,
+    dbName: 'savrivo',
+    ...(process.env.MONGODB_TLS_ALLOW_INVALID_CERTS === 'true' || config.isDev
+      ? { tlsAllowInvalidCertificates: true }
+      : {}),
+  };
+
   try {
     mongoose.set('strictQuery', false);
 
     console.log(`[DB] Connecting to MongoDB Atlas: ${sanitizeMongoUri(config.mongoUri)}...`);
 
-    await mongoose.connect(config.mongoUri, {
-      serverSelectionTimeoutMS: 10000,
-      dbName: 'savrivo',
-    });
+    await mongoose.connect(config.mongoUri, connectOptions);
 
     console.log('[DB] Successfully connected to MongoDB Atlas database: savrivo');
   } catch (err: unknown) {
+    // If local network DNS rejects SRV records (common on some Windows networks), attempt once with public DNS resolvers
+    if (err instanceof Error && err.message.includes('querySrv ECONNREFUSED')) {
+      try {
+        console.warn('[DB] Local DNS rejected SRV lookup. Retrying with public DNS resolvers (8.8.8.8, 1.1.1.1)...');
+        const dns = await import('dns');
+        dns.setServers(['8.8.8.8', '1.1.1.1']);
+        await mongoose.connect(config.mongoUri, connectOptions);
+        console.log('[DB] Successfully connected to MongoDB Atlas database: savrivo');
+        return;
+      } catch (retryErr: unknown) {
+        const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr);
+        console.error('[DB] Failed to connect to MongoDB Atlas after DNS fallback:', retryMsg);
+        throw retryErr;
+      }
+    }
+
     const message = err instanceof Error ? err.message : String(err);
     console.error('[DB] Failed to connect to MongoDB Atlas:', message);
     throw err;
