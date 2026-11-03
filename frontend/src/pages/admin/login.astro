@@ -87,7 +87,7 @@ import { url } from '../../lib/paths';
       btn.textContent = 'Verifying...';
       errorEl.className = 'hidden';
 
-      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const email = (document.getElementById('email') as HTMLInputElement).value.trim().toLowerCase();
       const password = (document.getElementById('password') as HTMLInputElement).value;
 
       try {
