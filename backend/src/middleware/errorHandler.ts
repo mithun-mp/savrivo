@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { config } from '../config/env';
 import { sendError } from '../utils/response';
+import { sanitizeErrorMessage } from '../utils/sanitize';
 
 export function errorHandler(
   err: unknown,
@@ -54,7 +55,7 @@ export function errorHandler(
       return;
     }
 
-    sendError(res, config.isDev ? err.message : 'An unexpected error occurred');
+    sendError(res, config.isDev ? sanitizeErrorMessage(err.message) : 'An unexpected error occurred');
     return;
   }
 

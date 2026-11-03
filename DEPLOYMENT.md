@@ -43,7 +43,7 @@ mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/sav
 2. Click **New +** → **Web Service**.
 3. Connect the repository `mithun-mp/savrivo` (or link your GitHub account).
 4. Configure the service settings:
-   - **Name:** `savrivo-backend`
+   - **Name:** `savrivo-api`
    - **Region:** Singapore or Frankfurt (lowest latency to India)
    - **Branch:** `main`
    - **Root Directory:** `backend`
@@ -61,17 +61,32 @@ mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/sav
    | `MONGODB_URI` | `mongodb+srv://mithunmpmail_db_user:<DB_PASSWORD>@savrivo.qlvie1u.mongodb.net/savrivo?retryWrites=true&w=majority&appName=SAVRIVO` | Insert actual password for user |
    | `JWT_SECRET` | *Strong 64+ char random string* | Used for editorial admin JWT tokens |
    | `JWT_EXPIRES_IN` | `7d` | Token validity |
-   | `ADMIN_EMAIL` | `admin@savrivo.in` | Primary administrator account email |
-   | `ADMIN_PASSWORD_HASH` | *bcrypt hash* | Generated bcrypt hash (cost >= 12) |
+   | `ADMIN_EMAIL` | `admin@savrivo.in` | (Optional default for admin CLI) Primary administrator account email |
    | `FRONTEND_ORIGIN` | `https://mithun-mp.github.io` | Origin for both `savrivo` and `savrivoapp` |
+
+   > [!NOTE]
+   > Administrator accounts are provisioned interactively via the Render Shell (Step 8) with masked input. Plaintext passwords must never be stored in service environment variables.
 
 6. Click **Create Web Service**.
 7. Once deployed, verify health:
    ```bash
-   curl -i https://savrivo-backend.onrender.com/api/health
+   curl -i https://savrivo-api.onrender.com/api/health
    # Expected response: 200 OK {"success":true,"data":{"status":"ok","db":"connected"}}
    ```
-8. (Optional) Run database seed from Render's **Shell** tab:
+8. Create the Primary Administrator Account:
+   From Render's **Shell** tab:
+   ```bash
+   node dist/scripts/create-admin.js
+   ```
+   * An interactive terminal (TTY) is required for execution.
+   * The interactive CLI prompts for the administrator email and securely masks password input with confirmation.
+   * Preserves passwords exactly as supplied, including whitespace.
+   * Passwords are never echoed, printed in logs, or passed via plaintext CLI arguments.
+   * The compiled script runs directly in Node.js using only production runtime dependencies (`dotenv`, `zod`, `mongoose`, `bcryptjs`).
+   * The account is created with `role: 'superadmin'` and hashed using bcrypt (cost factor 12).
+   * If the account already exists, the command exits safely without modifying the account.
+
+9. (Optional) Run database seed from Render's **Shell** tab:
    ```bash
    pnpm run seed
    ```
@@ -87,7 +102,7 @@ The repository contains an automated GitHub Actions workflow at [`.github/workfl
 3. Navigate to **Settings** → **Secrets and variables** → **Actions**.
 4. Add a Repository Secret:
    - **Name:** `PUBLIC_API_URL`
-   - **Value:** `https://savrivo-backend.onrender.com/api` (your deployed Render URL)
+   - **Value:** `https://savrivo-api.onrender.com/api` (your deployed Render URL)
 5. Push to `main` (or trigger the workflow manually from the **Actions** tab).
 6. The workflow will:
    - Checkout code

@@ -53,21 +53,26 @@ EShop/
    JWT_SECRET=your-secure-random-secret-at-least-64-characters-long
    JWT_EXPIRES_IN=7d
    ADMIN_EMAIL=admin@savrivo.in
-   ADMIN_PASSWORD_HASH=
    FRONTEND_ORIGIN=http://localhost:4321
    ```
 
-5. Seed initial data (categories, sample merchants, demo products, and editorial guide):
+5. Create your initial administrator account:
+   ```bash
+   pnpm run create-admin
+   ```
+   Follow the interactive prompt to specify the admin email and a secure password.
+
+6. Seed initial data (categories, sample merchants, demo products, and editorial guide):
    ```bash
    pnpm run seed
    ```
 
-6. Start the API server in dev mode (hot reload):
+7. Start the API server in dev mode (hot reload):
    ```bash
    pnpm run dev
    ```
 
-7. Verify backend health check:
+8. Verify backend health check:
    ```
    http://localhost:4000/api/health
    ```
