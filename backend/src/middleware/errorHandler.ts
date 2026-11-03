@@ -55,6 +55,13 @@ export function errorHandler(
       return;
     }
 
+    const customStatus = (err as unknown as Record<string, unknown>).statusCode;
+    if (typeof customStatus === 'number') {
+      const code = String((err as unknown as Record<string, unknown>).code || 'OPERATION_FAILED');
+      sendError(res, sanitizeErrorMessage(err.message), customStatus, code);
+      return;
+    }
+
     sendError(res, config.isDev ? sanitizeErrorMessage(err.message) : 'An unexpected error occurred');
     return;
   }
